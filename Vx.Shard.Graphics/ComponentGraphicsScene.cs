@@ -1,8 +1,8 @@
 namespace Vx.Shard.Graphics;
 
-using Vx.Shard.Core;
+using Core;
 
 public record ComponentGraphicsScene : IComponent
 {
-    public DrawableContainer root { get; set; } = new DrawableContainer();
+    public DrawableContainer Root { get; init; } = new();
 }

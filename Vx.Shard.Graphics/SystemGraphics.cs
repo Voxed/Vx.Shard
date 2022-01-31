@@ -1,34 +1,43 @@
+// Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
+// License TBD.
+
 namespace Vx.Shard.Graphics;
 
-using Vx.Shard.Core;
+using Core;
 
 public class SystemGraphics : ISystem
 {
     private delegate void RegisterDrawableCallback(ComponentStoreListenerBuilder componentStoreListenerBuilder);
-    private readonly List<RegisterDrawableCallback> registerDrawableCallbacks = new List<RegisterDrawableCallback>();
+
+    private readonly List<RegisterDrawableCallback> registerDrawableCallbacks = new();
 
     public void RegisterDrawable<T>() where T : IDrawableComponent, IComponent
     {
-        registerDrawableCallbacks.Add(cslb =>
+        registerDrawableCallbacks.Add(componentStoreListenerBuilder =>
         {
-            cslb.AddCallback<T>(((World world, Entity entity) =>
-            {
-                world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
+            componentStoreListenerBuilder.AddCallback<T>((
+                (world, entity) =>
                 {
-                    e.GetComponent<ComponentGraphicsScene>()!.root.AddChild(entity.GetComponent<T>()!.GetDrawable());
-                });
-            }, (World world, Entity entity) =>
-            {
-                world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
+                    world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
+                    {
+                        e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(entity.GetComponent<T>()!
+                            .GetDrawable());
+                    });
+                },
+                (world, entity) =>
                 {
-                    e.GetComponent<ComponentGraphicsScene>()!.root.RemoveChild(entity.GetComponent<T>()!.GetDrawable());
-                });
-            }
+                    world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
+                    {
+                        e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(entity.GetComponent<T>()!
+                            .GetDrawable());
+                    });
+                }
             ));
         });
     }
 
-    public void Configure(MessageBusListenerBuilder messageBusListenerBuilder, ComponentStoreListenerBuilder componentStoreListenerBuilder)
+    public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
+        ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
         registerDrawableCallbacks.ForEach(cb => cb(componentStoreListenerBuilder));
     }

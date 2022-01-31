@@ -127,7 +127,7 @@ public class SDLDrawablesSystem : ISystem
             world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(entity =>
             {
                 ComponentGraphicsScene scene = entity.GetComponent<ComponentGraphicsScene>()!;
-                DrawableContainer root = scene.root;
+                DrawableContainer root = scene.Root;
                 root.Accept(context, new DrawableVisitorSDL());
             });
 
