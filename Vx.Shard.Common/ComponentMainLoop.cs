@@ -14,7 +14,7 @@ public record ComponentMainLoop : IComponent
     /// Whether the main loop should be running.
     /// </summary>
     public bool Running { get; set; } = true;
-    
+
     /// <summary>
     /// The time when the main loop was started.
     /// </summary>

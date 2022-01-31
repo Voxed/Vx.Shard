@@ -11,8 +11,10 @@ using Core;
 /// </summary>
 public class SystemMainLoop : ISystem
 {
-    public void Configure(MessageBusListenerBuilder messageBusListenerBuilder, ComponentStoreListenerBuilder componentStoreListenerBuilder)
-    { }
+    public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
+        ComponentStoreListenerBuilder componentStoreListenerBuilder)
+    {
+    }
 
     public void Initialize(World world)
     {

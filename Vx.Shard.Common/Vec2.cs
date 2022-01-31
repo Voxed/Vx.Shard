@@ -17,7 +17,7 @@ public class Vec2
     /// The x component of the 2D vector.
     /// </summary>
     public float X;
-    
+
     /// <summary>
     /// The y component of the 2D vector.
     /// </summary>
