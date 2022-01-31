@@ -1,6 +1,6 @@
 <h1 align="center">Vx.Shard</h1>
 <p align="center">
-    <img width="400" src="VxShard-logo.svg">
+    <img width="300" src="VxShard-logo.svg">
 </p>
 This is my epic engine designed for the DIT455 Game Engine Architecture course.
 
