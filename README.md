@@ -1,6 +1,6 @@
 <h1 align="center">Vx.Shard</h1>
 <p align="center">
-    <img width="300" src="VxShard-logo.svg">
+    <img width="350" src="VxShard-logo.svg">
 </p>
 An ECS based game engine designed for the DIT455 Game Engine Architecture course.
 
