@@ -30,7 +30,10 @@ public class EntitySet : IEnumerable<Entity>
     /// <returns>The entity enumerator.</returns>
     public IEnumerator<Entity> GetEnumerator()
     {
-        return _entities.Select(t => new Entity(t, _store)).GetEnumerator();
+        foreach(var i in _entities) 
+            yield return new Entity(i, _store);
+        // Don't use LINQ in order to decrease garbage collection.
+        // return _entities.Select(t => new Entity(t, _store)).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
