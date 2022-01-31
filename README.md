@@ -9,6 +9,27 @@ The engine uses the popular design pattern ECS (Entity-Component-System). It enc
 
 This structure is as one might imagine extremely modular, it allows for adding and replacing integral systems even from outside of the main engine source tree. As such, everything is optional, the engine ships with a couple of useful premade systems which you can use, or you can head out on your own and just make use of the ECS at it's core.
 
+For instance, a simple breakout game might look something like this:
+```cs
+SystemGraphics graphicsSystem = new SystemGraphics();
+drawableSystem.RegisterDrawable<ComponentGraphicsBall>();
+drawableSystem.RegisterDrawable<ComponentGraphicsWall>();
+drawableSystem.RegisterDrawable<ComponentGraphicsPaddle>();
+
+Engine engine = new EngineBuilder()
+.AddSystem(graphicsSystem)
+.AddSystem(new SystemSDL())
+.AddSystem(new SystemSDLRenderer())
+.AddSystem(new SystemSDLInput())
+.AddSystem(new SystemCollision())
+.AddSystem(new SystemSound())
+.AddSystem(new SystemBreakout())
+.AddSystem(new SystemMainLoop())
+.Build();
+```
+
+System communication is carried out by component data, component listeners and a messagebus.
+
 ## Implemented(ish) Systems
 Implemented is a strong word, these probably need some rework, especially the SDL systems.
 * **SystemMainLoop**        
