@@ -17,15 +17,15 @@ graphicsSystem.RegisterDrawable<ComponentGraphicsWall>();
 graphicsSystem.RegisterDrawable<ComponentGraphicsPaddle>();
 
 Engine engine = new EngineBuilder()
-.AddSystem(graphicsSystem)
-.AddSystem(new SystemSDL())
-.AddSystem(new SystemSDLRenderer())
-.AddSystem(new SystemSDLInput())
-.AddSystem(new SystemCollision())
-.AddSystem(new SystemSound())
-.AddSystem(new SystemBreakout())
-.AddSystem(new SystemMainLoop())
-.Build();
+  .AddSystem(graphicsSystem)
+  .AddSystem(new SystemSdl())
+  .AddSystem(new SystemSdlRenderer())
+  .AddSystem(new SystemSdlInput())
+  .AddSystem(new SystemCollision())
+  .AddSystem(new SystemSound())
+  .AddSystem(new SystemBreakout())
+  .AddSystem(new SystemMainLoop())
+  .Build();
 ```
 
 System communication is carried out by component data, component listeners and a messagebus.
