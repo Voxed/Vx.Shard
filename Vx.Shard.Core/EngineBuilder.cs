@@ -22,7 +22,7 @@ public class EngineBuilder
     }
 
     /// <summary>
-    /// Builds and starts the engine.
+    /// Builds the engine and configures all the systems.
     /// </summary>
     /// <returns>The built engine.</returns>
     public Engine Build()

@@ -7,15 +7,15 @@ using Vx.Shard.Common;
 
 Console.WriteLine(Directory.GetCurrentDirectory());
 
-var drawableSystem = new SystemGraphics();
-drawableSystem.RegisterDrawable<ClientTestComponent>();
+var graphicsSystem = new SystemGraphics();
+graphicsSystem.RegisterDrawable<ClientTestComponent>();
 
-new EngineBuilder()
-.AddSystem(drawableSystem)
+var engine = new EngineBuilder()
+.AddSystem(graphicsSystem)
 .AddSystem(new SystemSdl())
 .AddSystem(new SystemSdlRenderer())
 .AddSystem(new TestSystem())
 .AddSystem(new SystemMainLoop())
 .Build();
 
-Console.WriteLine("Hello, World!");
+engine.Start();
