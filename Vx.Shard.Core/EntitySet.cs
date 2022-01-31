@@ -1,9 +1,9 @@
 // Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
 // License TBD.
 
-using System.Collections;
-
 namespace Vx.Shard.Core;
+
+using System.Collections;
 
 /// <summary>
 /// A set of entities in the game world.
