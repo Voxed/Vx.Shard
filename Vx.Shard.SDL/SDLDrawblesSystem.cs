@@ -57,7 +57,7 @@ public class SDLDrawablesSystem : ISystem
     private record DrawableVisitorSDLContext
     {
         public IntPtr Renderer;
-        public Vec2 Position { get; init; } = Vec2.ZERO;
+        public Vec2 Position { get; init; } = Vec2.Zero;
 
         public SDLDrawablesSystem? sys { get; init; }
     }
