@@ -5,7 +5,7 @@ using Vx.Shard.Common;
 
 public class DrawableContainer : IDrawable
 {
-    public Vec2 Position = Vec2.ZERO;
+    public Vec2 Position = Vec2.Zero;
 
     private readonly List<IDrawable> children = new List<IDrawable>();
     public ReadOnlyCollection<IDrawable> Children { get { return children.AsReadOnly(); } }

@@ -1,7 +1,14 @@
+// Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
+// License TBD.
+
 namespace Vx.Shard.Common;
 
-using Vx.Shard.Core;
+using Core;
 
+/// <summary>
+/// The MainLoop system. It invokes a main loop in initialization and transmits MessageUpdate continuously while the
+/// singleton component ComponentMainLoop has Running = true.
+/// </summary>
 public class SystemMainLoop : ISystem
 {
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder, ComponentStoreListenerBuilder componentStoreListenerBuilder)
@@ -15,14 +22,14 @@ public class SystemMainLoop : ISystem
         });
         world.GetEntitiesWith<ComponentMainLoop>().ToList().ForEach(e =>
         {
-            DateTime lastTick = DateTime.Now;
+            var lastTick = DateTime.Now;
             while (e.GetComponent<ComponentMainLoop>()!.Running)
             {
-                float delta = (float)(DateTime.Now - lastTick).TotalSeconds;
+                var delta = DateTime.Now - lastTick;
                 lastTick = DateTime.Now;
                 world.Send(new MessageUpdate
                 {
-                    Delta = delta,
+                    Delta = delta
                 });
             }
         });
