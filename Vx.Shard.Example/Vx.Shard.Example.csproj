@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vx.Shard.Core\Vx.Shard.Core.csproj" />
-    <ProjectReference Include="..\Vx.Shard.SDL\Vx.Shard.SDL.csproj" />
+    <ProjectReference Include="..\Vx.Shard.Sdl\Vx.Shard.Sdl.csproj" />
     <ProjectReference Include="..\Vx.Shard.Graphics\Vx.Shard.Graphics.csproj" />
   </ItemGroup>
 

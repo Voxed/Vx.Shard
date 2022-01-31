@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Example", "Vx.Shar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2", "SDL2\SDL2.csproj", "{FCBD4647-CED7-433D-B604-3D68E7F93FBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.SDL", "Vx.Shard.SDL\Vx.Shard.SDL.csproj", "{882456F5-C7DA-416B-83A0-EC1A04441A37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Sdl", "Vx.Shard.Sdl\Vx.Shard.Sdl.csproj", "{882456F5-C7DA-416B-83A0-EC1A04441A37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Graphics", "Vx.Shard.Graphics\Vx.Shard.Graphics.csproj", "{3A4A9311-FD11-401E-A2DE-2384D6EFBB2A}"
 EndProject

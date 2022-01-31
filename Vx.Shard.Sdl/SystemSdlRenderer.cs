@@ -1,4 +1,4 @@
-namespace Vx.Shard.SDL;
+namespace Vx.Shard.Sdl;
 
 using Core;
 using SDL2;
@@ -30,9 +30,7 @@ public class SystemSdlRenderer : ISystem
         var img = SDL_image.IMG_Load(path);
 
         Console.WriteLine(SDL_image.IMG_GetError());
-
-        /*Debug.getInstance().log("IMG_Load: " + SDL_image.IMG_GetError());*/
-
+        
         _spriteBuffer[path] = SDL.SDL_CreateTextureFromSurface(rend, img);
 
         SDL.SDL_SetTextureBlendMode(_spriteBuffer[path], SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
@@ -67,9 +65,7 @@ public class SystemSdlRenderer : ISystem
         {
             SDL.SDL_Rect sRect;
             SDL.SDL_Rect tRect;
-
-            //var sprite = loadTexture(trans);
-
+            
             var spr = context.Sys!.LoadTexture(sprite.TexturePath!, out var w, out var h, context.Renderer);
 
             sRect.x = 0;
@@ -90,7 +86,6 @@ public class SystemSdlRenderer : ISystem
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        Console.WriteLine("Config!!!");
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
     }
 

@@ -11,7 +11,7 @@ public class SystemGraphics : ISystem
 
     private readonly List<RegisterDrawableCallback> _registerDrawableCallbacks = new();
 
-    public void RegisterDrawable<T>() where T : IDrawableComponent, IComponent
+    public SystemGraphics RegisterDrawable<T>() where T : IDrawableComponent, IComponent
     {
         _registerDrawableCallbacks.Add(componentStoreListenerBuilder =>
         {
@@ -34,6 +34,8 @@ public class SystemGraphics : ISystem
                 }
             ));
         });
+
+        return this;
     }
 
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,

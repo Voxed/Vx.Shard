@@ -1,4 +1,4 @@
-namespace Vx.Shard.SDL;
+namespace Vx.Shard.Sdl;
 
 using Core;
 using Common;
