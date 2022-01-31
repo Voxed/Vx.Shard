@@ -30,6 +30,8 @@ Engine engine = new EngineBuilder()
 
 System communication is carried out by component data, component listeners and a messagebus.
 
+The engine will mainly target Linux as it is the system used in development, but it will probably work on Windows and Mac too.
+
 ## Implemented(ish) Systems
 Implemented is a strong word, these probably need some rework, especially the SDL systems.
 * **SystemMainLoop**        
