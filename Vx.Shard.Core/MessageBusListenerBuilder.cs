@@ -12,20 +12,20 @@ public class MessageBusListenerBuilder
     // on the type of message which was sent.
     private class ConcreteMessageBusListener : IMessageBusListener
     {
-        private readonly World world;
-        private readonly Dictionary<Type, List<object>> callbacks;
+        private readonly World _world;
+        private readonly Dictionary<Type, List<object>> _callbacks;
 
         public ConcreteMessageBusListener(World world, Dictionary<Type, List<object>> callbacks)
         {
-            this.world = world;
-            this.callbacks = callbacks;
+            _world = world;
+            _callbacks = callbacks;
         }
 
         public void OnMessage<T>(T message) where T : IMessage
         {
-            if (callbacks.ContainsKey(typeof(T)))
+            if (_callbacks.ContainsKey(typeof(T)))
             {
-                callbacks[typeof(T)].ForEach(cb => { ((Callback<T>) cb)(world, message); });
+                _callbacks[typeof(T)].ForEach(cb => { ((Callback<T>) cb)(_world, message); });
             }
         }
     }
@@ -36,7 +36,7 @@ public class MessageBusListenerBuilder
     /// <typeparam name="T"></typeparam>
     public delegate void Callback<in T>(World world, T message);
 
-    private readonly Dictionary<Type, List<object>> callbacks = new();
+    private readonly Dictionary<Type, List<object>> _callbacks = new();
 
     /// <summary>
     /// Add a callback to the message bus listener for a specific message type.
@@ -46,12 +46,12 @@ public class MessageBusListenerBuilder
     /// <returns>Self to allow for method chaining.</returns>
     public MessageBusListenerBuilder AddCallback<T>(Callback<T> callback) where T : IMessage
     {
-        if (!callbacks.ContainsKey(typeof(T)))
+        if (!_callbacks.ContainsKey(typeof(T)))
         {
-            callbacks.Add(typeof(T), new List<object>());
+            _callbacks.Add(typeof(T), new List<object>());
         }
 
-        callbacks[typeof(T)].Add(callback);
+        _callbacks[typeof(T)].Add(callback);
 
         return this;
     }
@@ -63,6 +63,6 @@ public class MessageBusListenerBuilder
     /// <returns>The new IMessageBusListener.</returns>
     internal IMessageBusListener Build(World world)
     {
-        return new ConcreteMessageBusListener(world, callbacks);
+        return new ConcreteMessageBusListener(world, _callbacks);
     }
 }

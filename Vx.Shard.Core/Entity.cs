@@ -8,7 +8,7 @@ namespace Vx.Shard.Core;
 /// </summary>
 public class Entity
 {
-    private readonly ComponentStore store;
+    private readonly ComponentStore _store;
 
     /// <summary>
     /// The numerical id of the entity.
@@ -23,7 +23,7 @@ public class Entity
     internal Entity(int id, ComponentStore store)
     {
         Id = id;
-        this.store = store;
+        _store = store;
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class Entity
     /// <typeparam name="T">The type of the component</typeparam>
     public void AddComponent<T>(T component) where T : IComponent
     {
-        store.AddComponent(Id, component);
+        _store.AddComponent(Id, component);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class Entity
     /// <typeparam name="T">The type of the component to remove.</typeparam>
     public void RemoveComponent<T>() where T : IComponent
     {
-        store.RemoveComponent<T>(Id);
+        _store.RemoveComponent<T>(Id);
     }
 
     /// <summary>
@@ -55,6 +55,6 @@ public class Entity
     /// <returns>The component if it exists, otherwise null.</returns>
     public T? GetComponent<T>() where T : IComponent
     {
-        return store.GetComponent<T>(Id);
+        return _store.GetComponent<T>(Id);
     }
 }

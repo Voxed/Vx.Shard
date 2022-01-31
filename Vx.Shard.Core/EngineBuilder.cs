@@ -8,7 +8,7 @@ namespace Vx.Shard.Core;
 /// </summary>
 public class EngineBuilder
 {
-    private readonly List<ISystem> systems = new();
+    private readonly List<ISystem> _systems = new();
 
     /// <summary>
     /// Add a system to the engine.
@@ -17,7 +17,7 @@ public class EngineBuilder
     /// <returns>Self in order to allow for method chaining.</returns>
     public EngineBuilder AddSystem(ISystem system)
     {
-        systems.Add(system);
+        _systems.Add(system);
         return this;
     }
 
@@ -27,6 +27,6 @@ public class EngineBuilder
     /// <returns>The built engine.</returns>
     public Engine Build()
     {
-        return new Engine(systems);
+        return new Engine(_systems);
     }
 }

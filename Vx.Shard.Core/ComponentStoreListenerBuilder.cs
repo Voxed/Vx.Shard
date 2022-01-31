@@ -12,28 +12,28 @@ public class ComponentStoreListenerBuilder
     // on the type of component which was added/removed.
     private class ComponentStoreListener : IComponentStoreListener
     {
-        private readonly World world;
-        private readonly Dictionary<Type, List<(Callback, Callback)>> callbacks;
+        private readonly World _world;
+        private readonly Dictionary<Type, List<(Callback, Callback)>> _callbacks;
 
         public ComponentStoreListener(World world, Dictionary<Type, List<(Callback, Callback)>> callbacks)
         {
-            this.world = world;
-            this.callbacks = callbacks;
+            _world = world;
+            _callbacks = callbacks;
         }
 
         public void OnCreation<T>(int entityId) where T : IComponent
         {
-            if (callbacks.ContainsKey(typeof(T)))
+            if (_callbacks.ContainsKey(typeof(T)))
             {
-                callbacks[typeof(T)].ForEach(cb => { cb.Item1(world, new Entity(entityId, world.ComponentStore)); });
+                _callbacks[typeof(T)].ForEach(cb => { cb.Item1(_world, new Entity(entityId, _world.ComponentStore)); });
             }
         }
 
         public void OnDestruction<T>(int entityId) where T : IComponent
         {
-            if (callbacks.ContainsKey(typeof(T)))
+            if (_callbacks.ContainsKey(typeof(T)))
             {
-                callbacks[typeof(T)].ForEach(cb => { cb.Item2(world, new Entity(entityId, world.ComponentStore)); });
+                _callbacks[typeof(T)].ForEach(cb => { cb.Item2(_world, new Entity(entityId, _world.ComponentStore)); });
             }
         }
     }
@@ -45,7 +45,7 @@ public class ComponentStoreListenerBuilder
     /// <param name="entity">The entity which the component was added/removed from.</param>
     public delegate void Callback(World world, Entity entity);
 
-    private readonly Dictionary<Type, List<(Callback, Callback)>> callbacks
+    private readonly Dictionary<Type, List<(Callback, Callback)>> _callbacks
         = new();
 
     /// <summary>
@@ -57,12 +57,12 @@ public class ComponentStoreListenerBuilder
     /// <returns>Self to allow for method chaining.</returns>
     public ComponentStoreListenerBuilder AddCallback<T>((Callback, Callback) callback) where T : IComponent
     {
-        if (!callbacks.ContainsKey(typeof(T)))
+        if (!_callbacks.ContainsKey(typeof(T)))
         {
-            callbacks.Add(typeof(T), new List<(Callback, Callback)>());
+            _callbacks.Add(typeof(T), new List<(Callback, Callback)>());
         }
 
-        callbacks[typeof(T)].Add(callback);
+        _callbacks[typeof(T)].Add(callback);
         return this;
     }
 
@@ -73,6 +73,6 @@ public class ComponentStoreListenerBuilder
     /// <returns>The new IComponentStoreListener.</returns>
     internal IComponentStoreListener Build(World world)
     {
-        return new ComponentStoreListener(world, callbacks);
+        return new ComponentStoreListener(world, _callbacks);
     }
 }

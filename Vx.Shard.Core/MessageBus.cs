@@ -21,7 +21,7 @@ internal interface IMessageBusListener
 /// </summary>
 internal class MessageBus
 {
-    private IMessageBusListener? listener;
+    private IMessageBusListener? _listener;
 
     /// <summary>
     /// Set the listener of the message bus.
@@ -30,7 +30,7 @@ internal class MessageBus
     /// <param name="newListener">The new listener to use.</param>
     internal void SetListener(IMessageBusListener newListener)
     {
-        listener = newListener;
+        _listener = newListener;
     }
 
     /// <summary>
@@ -40,6 +40,6 @@ internal class MessageBus
     /// <typeparam name="T">The type of the message.</typeparam>
     internal void Send<T>(T message) where T : IMessage
     {
-        listener?.OnMessage(message);
+        _listener?.OnMessage(message);
     }
 }

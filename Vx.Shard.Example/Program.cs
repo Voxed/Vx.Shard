@@ -7,13 +7,13 @@ using Vx.Shard.Common;
 
 Console.WriteLine(Directory.GetCurrentDirectory());
 
-SystemGraphics drawableSystem = new SystemGraphics();
+var drawableSystem = new SystemGraphics();
 drawableSystem.RegisterDrawable<ClientTestComponent>();
 
-Engine engine = new EngineBuilder()
+new EngineBuilder()
 .AddSystem(drawableSystem)
-.AddSystem(new SystemSDL())
-.AddSystem(new SDLDrawablesSystem())
+.AddSystem(new SystemSdl())
+.AddSystem(new SystemSdlRenderer())
 .AddSystem(new TestSystem())
 .AddSystem(new SystemMainLoop())
 .Build();

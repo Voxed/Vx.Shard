@@ -10,8 +10,8 @@ using System.Collections;
 /// </summary>
 public class EntitySet : IEnumerable<Entity>
 {
-    private readonly List<int> entities;
-    private readonly ComponentStore store;
+    private readonly List<int> _entities;
+    private readonly ComponentStore _store;
 
     /// <summary>
     /// Construct a new entity set from a list of entity ids and the component store they exist in.
@@ -20,8 +20,8 @@ public class EntitySet : IEnumerable<Entity>
     /// <param name="store">The component store where the entities reside.</param>
     internal EntitySet(List<int> entities, ComponentStore store)
     {
-        this.entities = entities;
-        this.store = store;
+        _entities = entities;
+        _store = store;
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ public class EntitySet : IEnumerable<Entity>
     /// <returns>The entity enumerator.</returns>
     public IEnumerator<Entity> GetEnumerator()
     {
-        return entities.Select(t => new Entity(t, store)).GetEnumerator();
+        return _entities.Select(t => new Entity(t, _store)).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -45,6 +45,6 @@ public class EntitySet : IEnumerable<Entity>
     /// <returns>A new set with entities who have the specified component.s</returns>
     public EntitySet With<T>() where T : IComponent
     {
-        return new EntitySet(store.GetEntitiesWith<T>().Intersect(entities).ToList(), store);
+        return new EntitySet(_store.GetEntitiesWith<T>().Intersect(_entities).ToList(), _store);
     }
 }

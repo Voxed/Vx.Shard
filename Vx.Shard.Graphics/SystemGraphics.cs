@@ -9,11 +9,11 @@ public class SystemGraphics : ISystem
 {
     private delegate void RegisterDrawableCallback(ComponentStoreListenerBuilder componentStoreListenerBuilder);
 
-    private readonly List<RegisterDrawableCallback> registerDrawableCallbacks = new();
+    private readonly List<RegisterDrawableCallback> _registerDrawableCallbacks = new();
 
     public void RegisterDrawable<T>() where T : IDrawableComponent, IComponent
     {
-        registerDrawableCallbacks.Add(componentStoreListenerBuilder =>
+        _registerDrawableCallbacks.Add(componentStoreListenerBuilder =>
         {
             componentStoreListenerBuilder.AddCallback<T>((
                 (world, entity) =>
@@ -39,7 +39,7 @@ public class SystemGraphics : ISystem
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        registerDrawableCallbacks.ForEach(cb => cb(componentStoreListenerBuilder));
+        _registerDrawableCallbacks.ForEach(cb => cb(componentStoreListenerBuilder));
     }
 
     public void Initialize(World world)

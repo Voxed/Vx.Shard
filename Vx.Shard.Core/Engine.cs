@@ -9,7 +9,7 @@ namespace Vx.Shard.Core;
 /// </summary>
 public class Engine
 {
-    private readonly World world;
+    private readonly World _world;
 
     /// <summary>
     /// Constructs an engine from the chosen systems.
@@ -21,10 +21,10 @@ public class Engine
         MessageBusListenerBuilder messageBusListenerBuilder = new();
         ComponentStoreListenerBuilder componentStoreListenerBuilder = new();
         systems.ForEach(system => system.Configure(messageBusListenerBuilder, componentStoreListenerBuilder));
-        world = new World();
-        world.ComponentStore.SetListener(componentStoreListenerBuilder.Build(world));
-        world.MessageBus.SetListener(messageBusListenerBuilder.Build(world));
-        systems.ForEach(system => system.Initialize(world));
+        _world = new World();
+        _world.ComponentStore.SetListener(componentStoreListenerBuilder.Build(_world));
+        _world.MessageBus.SetListener(messageBusListenerBuilder.Build(_world));
+        systems.ForEach(system => system.Initialize(_world));
     }
 
     /// <summary>
@@ -34,6 +34,6 @@ public class Engine
     /// <typeparam name="T">The type of the message.</typeparam>
     public void Send<T>(T message) where T : IMessage
     {
-        world.Send(message);
+        _world.Send(message);
     }
 }

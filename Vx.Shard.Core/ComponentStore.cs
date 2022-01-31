@@ -28,9 +28,9 @@ internal interface IComponentStoreListener
 /// </summary>
 internal class ComponentStore
 {
-    private readonly Dictionary<Type, Dictionary<int, IComponent>> components = new();
-    private int nextEntityId;
-    private IComponentStoreListener? listener;
+    private readonly Dictionary<Type, Dictionary<int, IComponent>> _components = new();
+    private int _nextEntityId;
+    private IComponentStoreListener? _listener;
 
     /// <summary>
     /// Set the listener of the component store.
@@ -39,7 +39,7 @@ internal class ComponentStore
     /// <param name="newListener">The new listener to use.</param>
     internal void SetListener(IComponentStoreListener newListener)
     {
-        listener = newListener;
+        _listener = newListener;
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ internal class ComponentStore
     /// <returns>The id of the newly created entity.</returns>
     internal int CreateEntity()
     {
-        return nextEntityId++;
+        return _nextEntityId++;
     }
 
     /// <summary>
@@ -60,12 +60,12 @@ internal class ComponentStore
     /// <typeparam name="T">The type of the component to add.</typeparam>
     internal void AddComponent<T>(int entityId, T component) where T : IComponent
     {
-        if (!components.ContainsKey(typeof(T)))
-            components.Add(typeof(T), new Dictionary<int, IComponent>());
-        var entityComponentStore = components[typeof(T)];
+        if (!_components.ContainsKey(typeof(T)))
+            _components.Add(typeof(T), new Dictionary<int, IComponent>());
+        var entityComponentStore = _components[typeof(T)];
         if (entityComponentStore.ContainsKey(entityId)) return;
         entityComponentStore.Add(entityId, component);
-        listener?.OnCreation<T>(entityId);
+        _listener?.OnCreation<T>(entityId);
     }
 
     /// <summary>
@@ -76,10 +76,10 @@ internal class ComponentStore
     /// <typeparam name="T">The type of the component to remove.</typeparam>
     internal void RemoveComponent<T>(int entityId) where T : IComponent
     {
-        if (!components.ContainsKey(typeof(T))) return;
-        var entityComponentStore = components[typeof(T)];
+        if (!_components.ContainsKey(typeof(T))) return;
+        var entityComponentStore = _components[typeof(T)];
         if (!entityComponentStore.ContainsKey(entityId)) return;
-        listener?.OnDestruction<T>(entityId);
+        _listener?.OnDestruction<T>(entityId);
         entityComponentStore.Remove(entityId);
     }
 
@@ -92,8 +92,8 @@ internal class ComponentStore
     /// <returns>The component, null if the component doesn't exist.</returns>
     internal T? GetComponent<T>(int entityId) where T : IComponent
     {
-        if (!components.ContainsKey(typeof(T))) return default;
-        var entityComponentStore = components[typeof(T)];
+        if (!_components.ContainsKey(typeof(T))) return default;
+        var entityComponentStore = _components[typeof(T)];
         if (entityComponentStore.ContainsKey(entityId))
         {
             return (T) entityComponentStore[entityId];
@@ -110,6 +110,6 @@ internal class ComponentStore
     /// <returns>The entities which have the specified component.</returns>
     internal List<int> GetEntitiesWith<T>() where T : IComponent
     {
-        return components.ContainsKey(typeof(T)) ? components[typeof(T)].Keys.ToList() : new List<int>();
+        return _components.ContainsKey(typeof(T)) ? _components[typeof(T)].Keys.ToList() : new List<int>();
     }
 }

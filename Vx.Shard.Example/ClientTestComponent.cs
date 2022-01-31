@@ -1,16 +1,15 @@
 namespace Vx.Shard.Example;
 
-using Vx.Shard.Core;
-using Vx.Shard.Graphics;
+using Core;
+using Graphics;
 
 public record ClientTestComponent : IComponent, IDrawableComponent
 {
-    public string wow { get; set; } = "";
-    public DrawableSprite drawable = new DrawableSprite();
+    public readonly DrawableSprite Drawable = new();
 
     public IDrawable GetDrawable()
     {
-        drawable.TexturePath = "test.png";
-        return drawable;
+        Drawable.TexturePath = "test.png";
+        return Drawable;
     }
 }

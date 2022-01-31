@@ -1,87 +1,52 @@
 namespace Vx.Shard.Example;
 
-using Vx.Shard.Core;
-using Vx.Shard.Common;
+using Core;
+using Common;
 
 public class TestSystem : ISystem
 {
-
-    public void Configure(MessageBusListenerBuilder messageBusListenerBuilder, ComponentStoreListenerBuilder componentStoreListenerBuilder)
+    public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
+        ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        Console.WriteLine("Configured!");
-
-        messageBusListenerBuilder.AddCallback<UpdateMessage>(this.onUpdateMessage);
-        messageBusListenerBuilder.AddCallback<MessageUpdate>(this.update);
-        componentStoreListenerBuilder.AddCallback<PositionComponent>(((World world, Entity entity) =>
-        {
-            entity.AddComponent(new ClientTestComponent
+        messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
+        componentStoreListenerBuilder.AddCallback<PositionComponent>((
+            (_, entity) =>
             {
-                wow = "Hello!"
-            });
-        }, (World world, Entity entity) =>
-        {
-            entity.RemoveComponent<ClientTestComponent>();
-        }
+                entity.AddComponent(new ClientTestComponent());
+            }, (_, entity) => { entity.RemoveComponent<ClientTestComponent>(); }
         ));
     }
 
     public void Initialize(World world)
     {
-        for (int i = 0; i < 200; i++)
+        for (var i = 0; i < 200; i++)
         {
-            Entity entity = world.CreateEntity();
-            if (i >= 5)
+            var entity = world.CreateEntity();
+            if (i < 5) continue;
+            entity.AddComponent(new PositionComponent
             {
-                entity.AddComponent(new PositionComponent
-                {
-                    x = 12,
-                    y = 34
-                });
-                entity.GetComponent<PositionComponent>()!.x = 43;
-            }
+                X = 12,
+                Y = 34
+            });
+            entity.GetComponent<PositionComponent>()!.X = 43;
         }
     }
 
-    public void update(World world, MessageUpdate message)
+    private void Update(World world, MessageUpdate message)
     {
-        int i = 0;
+        var i = 0;
         world.GetEntitiesWith<ClientTestComponent>().ToList().ForEach(e =>
         {
             i++;
             world.GetEntitiesWith<ComponentMainLoop>().ToList().ForEach(e2 =>
             {
-                e.GetComponent<ClientTestComponent>()!.drawable.Position.X =
-                    (int)(Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds + i*0.1) * (350.0 - i*1.5)) + 290;
-                e.GetComponent<ClientTestComponent>()!.drawable.Position.Y =
-                    (int)(Math.Sin((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds + i*0.1) * (350.0 - i*1.5)) + 180;
+                e.GetComponent<ClientTestComponent>()!.Drawable.Position.X =
+                    (int) (Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
+                                    i * 0.1) * (350.0 - i * 1.5)) + 290;
+                e.GetComponent<ClientTestComponent>()!.Drawable.Position.Y =
+                    (int) (Math.Sin((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
+                                    i * 0.1) * (350.0 - i * 1.5)) + 180;
             });
-        });
-    }
-
-    public void onUpdateMessage(World world, UpdateMessage message)
-    {
-        Console.WriteLine(message);
-
-        world.GetEntitiesWith<PositionComponent>().ToList().ForEach(entity =>
-        {
-            Console.WriteLine(entity.GetComponent<PositionComponent>());
-        });
-        world.GetEntitiesWith<ClientTestComponent>().ToList().ForEach(entity =>
-        {
-            Console.WriteLine(entity.GetComponent<ClientTestComponent>());
-        });
-        world.GetEntitiesWith<PositionComponent>().ToList().ForEach(entity =>
-        {
-            entity.RemoveComponent<PositionComponent>();
-        });
-        Console.WriteLine("After removal");
-        world.GetEntitiesWith<PositionComponent>().ToList().ForEach(entity =>
-        {
-            Console.WriteLine(entity.GetComponent<PositionComponent>());
-        });
-        world.GetEntitiesWith<ClientTestComponent>().ToList().ForEach(entity =>
-        {
-            Console.WriteLine(entity.GetComponent<ClientTestComponent>());
         });
     }
 }
