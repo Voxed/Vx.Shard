@@ -12,9 +12,9 @@ This structure is as one might imagine extremely modular, it allows for adding a
 For instance, a simple breakout game might look something like this:
 ```cs
 SystemGraphics graphicsSystem = new SystemGraphics();
-drawableSystem.RegisterDrawable<ComponentGraphicsBall>();
-drawableSystem.RegisterDrawable<ComponentGraphicsWall>();
-drawableSystem.RegisterDrawable<ComponentGraphicsPaddle>();
+graphicsSystem.RegisterDrawable<ComponentGraphicsBall>();
+graphicsSystem.RegisterDrawable<ComponentGraphicsWall>();
+graphicsSystem.RegisterDrawable<ComponentGraphicsPaddle>();
 
 Engine engine = new EngineBuilder()
 .AddSystem(graphicsSystem)
