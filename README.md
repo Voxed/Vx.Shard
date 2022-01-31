@@ -17,15 +17,15 @@ SystemGraphics graphicsSystem = new SystemGraphics()
     .RegisterDrawable<ComponentGraphicsPaddle>();
 
 var engine = new EngineBuilder()
-  .AddSystem(graphicsSystem)
-  .AddSystem(new SystemSdl())
-  .AddSystem(new SystemSdlRenderer())
-  .AddSystem(new SystemSdlInput())
-  .AddSystem(new SystemCollision())
-  .AddSystem(new SystemSound())
-  .AddSystem(new SystemBreakout())
-  .AddSystem(new SystemMainLoop())
-  .Build();
+    .AddSystem(graphicsSystem)
+    .AddSystem(new SystemSdl())
+    .AddSystem(new SystemSdlRenderer())
+    .AddSystem(new SystemSdlInput())
+    .AddSystem(new SystemCollision())
+    .AddSystem(new SystemSound())
+    .AddSystem(new SystemBreakout())
+    .AddSystem(new SystemMainLoop())
+    .Build();
   
 engine.Start();
 ```
