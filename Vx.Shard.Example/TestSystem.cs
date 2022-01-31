@@ -35,10 +35,10 @@ public class TestSystem : ISystem
     private void Update(World world, MessageUpdate message)
     {
         var i = 0;
-        world.GetEntitiesWith<ClientTestComponent>().ToList().ForEach(e =>
+        foreach(var e in world.GetEntitiesWith<ClientTestComponent>().With<PositionComponent>())
         {
             i++;
-            world.GetEntitiesWith<ComponentMainLoop>().ToList().ForEach(e2 =>
+            foreach(var e2 in world.GetEntitiesWith<ComponentMainLoop>())
             {
                 e.GetComponent<ClientTestComponent>()!.Drawable.Position.X =
                     (int) (Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
@@ -46,7 +46,7 @@ public class TestSystem : ISystem
                 e.GetComponent<ClientTestComponent>()!.Drawable.Position.Y =
                     (int) (Math.Sin((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
                                     i * 0.1) * (350.0 - i * 1.5)) + 180;
-            });
-        });
+            }
+        }
     }
 }

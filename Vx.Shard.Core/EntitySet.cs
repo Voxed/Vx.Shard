@@ -30,10 +30,7 @@ public class EntitySet : IEnumerable<Entity>
     /// <returns>The entity enumerator.</returns>
     public IEnumerator<Entity> GetEnumerator()
     {
-        foreach(var i in _entities) 
-            yield return new Entity(i, _store);
-        // Don't use LINQ in order to decrease garbage collection.
-        // return _entities.Select(t => new Entity(t, _store)).GetEnumerator();
+        return new EntitySetEnumerator(_entities, _store);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -49,5 +46,46 @@ public class EntitySet : IEnumerable<Entity>
     public EntitySet With<T>() where T : IComponent
     {
         return new EntitySet(_store.GetEntitiesWith<T>().Intersect(_entities).ToList(), _store);
+    }
+}
+
+/// <summary>
+/// Enumerator of an EntitySet.
+/// </summary>
+public class EntitySetEnumerator : IEnumerator<Entity>
+{
+    private readonly ComponentStore _store;
+    private readonly List<int> _entities;
+    private int _position = -1;
+
+    /// <summary>
+    /// Construct a new EntitySetEnumerator from entities and the component store where they reside.
+    /// </summary>
+    /// <param name="list">The entities.</param>
+    /// <param name="store">The component store.</param>
+    internal EntitySetEnumerator(List<int> list, ComponentStore store)
+    {
+        _entities = list;
+        _store = store;
+    }
+
+    // Below follows standard implemented enumerator methods.
+    public bool MoveNext()
+    {
+        _position++;
+        return (_position < _entities.Count);
+    }
+
+    public void Reset()
+    {
+        _position = -1;
+    }
+    
+    object IEnumerator.Current => Current;
+
+    public Entity Current => new(_entities[_position], _store);
+
+    public void Dispose()
+    {
     }
 }

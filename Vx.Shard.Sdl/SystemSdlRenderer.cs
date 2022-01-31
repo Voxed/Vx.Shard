@@ -95,7 +95,7 @@ public class SystemSdlRenderer : ISystem
 
     private void Update(World world, MessageUpdate message)
     {
-        world.GetEntitiesWith<ComponentSdl>().ToList().ForEach(e =>
+        foreach(var e in world.GetEntitiesWith<ComponentSdl>())
         {
             var context = new DrawableVisitorSdlContext
             {
@@ -105,14 +105,14 @@ public class SystemSdlRenderer : ISystem
 
             SDL.SDL_SetRenderDrawColor(context.Renderer, 0, 0, 0, 255);
             SDL.SDL_RenderClear(context.Renderer);
-            world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(entity =>
+            foreach(var entity in world.GetEntitiesWith<ComponentGraphicsScene>())
             {
                 var scene = entity.GetComponent<ComponentGraphicsScene>()!;
                 var root = scene.Root;
                 root.Accept(context, new DrawableVisitorSdl());
-            });
+            }
 
             SDL.SDL_RenderPresent(context.Renderer);
-        });
+        }
     }
 }
