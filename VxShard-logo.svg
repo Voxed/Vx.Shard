@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
-   sodipodi:docname="drawing-1.svg"
+   sodipodi:docname="VxShard-logo.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.5592972"
-     inkscape:cx="215.16103"
-     inkscape:cy="233.4385"
+     inkscape:zoom="1.1935621"
+     inkscape:cx="175.52501"
+     inkscape:cy="190.18701"
      inkscape:window-width="1920"
      inkscape:window-height="1131"
      inkscape:window-x="0"
@@ -74,15 +74,15 @@
        d="M -14.255678,94.642076 45.420241,65.07936 10.740035,40.948772 -14.255678,94.642076"
        id="path5603" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.09618;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8.76946, 2.19237, 1.09618, 2.19237;stroke-dashoffset:5.70014;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:1.09617994;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:5.70013988;stroke-opacity:1"
        d="M 51.274829,149.65818 -14.255678,94.642076 C 45.420241,65.07936 45.420241,65.07936 45.420241,65.07936 l 5.854588,84.57882"
        id="path25609" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.09446;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8.75564, 2.18891, 1.09446, 2.18891;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:1.09445983;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="M 45.420241,65.07936 10.740035,40.948772"
        id="path25611" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.09446;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8.75564, 2.18891, 1.09446, 2.18891;stroke-dashoffset:9.63121;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:1.09400009;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:9.62716285;stroke-opacity:1"
        d="M 252.31142,15.924274 45.420241,65.07936"
        id="path25613" />
   </g>
