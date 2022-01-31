@@ -27,7 +27,7 @@ public class TestSystem : ISystem
 
     public void Initialize(World world)
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 200; i++)
         {
             Entity entity = world.CreateEntity();
             if (i >= 5)
@@ -51,9 +51,9 @@ public class TestSystem : ISystem
             world.GetEntitiesWith<ComponentMainLoop>().ToList().ForEach(e2 =>
             {
                 e.GetComponent<ClientTestComponent>()!.drawable.Position.X =
-                    (int)(Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds + i*0.05) * 200.0) + 280;
+                    (int)(Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds + i*0.1) * (350.0 - i*1.5)) + 290;
                 e.GetComponent<ClientTestComponent>()!.drawable.Position.Y =
-                    (int)(Math.Sin((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds + i*0.05) * 200.0) + 200;
+                    (int)(Math.Sin((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds + i*0.1) * (350.0 - i*1.5)) + 180;
             });
         });
     }
