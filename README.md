@@ -10,6 +10,7 @@ The engine uses the popular design pattern ECS (Entity-Component-System). It enc
 This structure is as one might imagine extremely modular, it allows for adding and replacing integral systems even from outside of the main engine source tree. As such, everything is optional, the engine ships with a couple of useful premade systems which you can use, or you can head out on your own and just make use of the ECS at it's core.
 
 ## Implemented(ish) Systems
+Implemented is a strong word, these probably need some rework, especially the SDL systems.
 * **SystemMainLoop**        
     * A system which invokes a stoppable main loop on initialization. Hook this up last in your EngineBuilder.
 * **SystemGraphics**        
