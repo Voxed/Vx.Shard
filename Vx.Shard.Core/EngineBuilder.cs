@@ -1,21 +1,32 @@
+// Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
+// License TBD.
+
 namespace Vx.Shard.Core;
 
+/// <summary>
+/// The EngineBuilder has methods for adding systems and building the final engine.
+/// </summary>
 public class EngineBuilder
 {
-    private readonly List<ISystem> systems = new List<ISystem>();
-    private readonly MessageBusListenerBuilder messageBusListenerBuilder = new MessageBusListenerBuilder();
-    private readonly ComponentStoreListenerBuilder componentStoreListenerBuilder = new ComponentStoreListenerBuilder();
+    private readonly List<ISystem> systems = new();
 
+    /// <summary>
+    /// Add a system to the engine.
+    /// </summary>
+    /// <param name="system">The engine to add.</param>
+    /// <returns>Self in order to allow for method chaining.</returns>
     public EngineBuilder AddSystem(ISystem system)
     {
         systems.Add(system);
         return this;
     }
 
+    /// <summary>
+    /// Builds and starts the engine.
+    /// </summary>
+    /// <returns>The built engine.</returns>
     public Engine Build()
     {
-        this.systems.ForEach(system => system.Configure(messageBusListenerBuilder, componentStoreListenerBuilder));
-        Engine engine = new Engine(systems, messageBusListenerBuilder, componentStoreListenerBuilder);
-        return engine;
+        return new Engine(systems);
     }
 }

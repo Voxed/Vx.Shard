@@ -1,30 +1,42 @@
+// Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
+// License TBD.
+
 namespace Vx.Shard.Core;
 
+/// <summary>
+/// Class World models the game world. It allows transmitting to the message-bus and operating on entities.
+/// </summary>
 public class World
 {
-    private readonly List<ISystem> systems;
-    private readonly MessageBus messageBus = new MessageBus();
-    private readonly ComponentStore componentStore = new ComponentStore();
+    internal readonly MessageBus MessageBus = new();
+    internal readonly ComponentStore ComponentStore = new();
 
-    internal World(List<ISystem> systems, MessageBusListenerBuilder messageBusListenerBuilder, ComponentStoreListenerBuilder componentStoreListenerBuilder)
-    {
-        this.systems = systems;
-        this.messageBus.SetListener(messageBusListenerBuilder.Build(this));
-        this.componentStore.SetListener(componentStoreListenerBuilder.Build(this, componentStore));
-    }
-
+    /// <summary>
+    /// Send a message onto the world message bus.
+    /// </summary>
+    /// <param name="message">The message to send.</param>
+    /// <typeparam name="T">The type of the message to send.</typeparam>
     public void Send<T>(T message) where T : IMessage
     {
-        this.messageBus.send(message);
+        MessageBus.Send(message);
     }
 
+    /// <summary>
+    /// Create an entity in the world.
+    /// </summary>
+    /// <returns>The entity created.</returns>
     public Entity CreateEntity()
     {
-        return new Entity(componentStore.CreateEntity(), componentStore);
+        return new Entity(ComponentStore.CreateEntity(), ComponentStore);
     }
 
+    /// <summary>
+    /// Get all entities with a specified component type.
+    /// </summary>
+    /// <typeparam name="T">The type of the component to query for.</typeparam>
+    /// <returns>The entities with the requested component.</returns>
     public EntitySet GetEntitiesWith<T>() where T : IComponent
     {
-        return new EntitySet(componentStore.GetEntitiesWith<T>(), componentStore);
+        return new EntitySet(ComponentStore.GetEntitiesWith<T>(), ComponentStore);
     }
 }
