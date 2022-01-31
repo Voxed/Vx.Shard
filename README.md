@@ -32,7 +32,7 @@ System communication is carried out by component data, component listeners and a
 
 The engine will mainly target Linux as it is the system used in development, but it will probably work on Windows and Mac too.
 
-## Implemented(ish) Systems
+## Implemented systems
 Implemented is a strong word, these probably need some rework, especially the SDL systems.
 * **SystemMainLoop**        
     * A system which invokes a stoppable main loop on initialization. Hook this up last in your EngineBuilder.
@@ -44,10 +44,10 @@ Implemented is a strong word, these probably need some rework, especially the SD
     * A system which takes in the main drawable scene outputted from the SystemGraphics and draws it on the SDL window.
 
 ## Todo
-* Alot of more stuff than this...
 * Comments
 * Improve existing systems
 * More nice to have engine features
 * Sound system
 * Collision system
 * Resource manager (no clear idea yet)
+* Alot more...
