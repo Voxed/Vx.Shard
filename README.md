@@ -11,12 +11,12 @@ This structure is as one might imagine extremely modular, it allows for adding a
 
 For instance, a simple breakout game might look something like this:
 ```cs
-SystemGraphics graphicsSystem = new SystemGraphics();
-graphicsSystem.RegisterDrawable<ComponentGraphicsBall>();
-graphicsSystem.RegisterDrawable<ComponentGraphicsWall>();
-graphicsSystem.RegisterDrawable<ComponentGraphicsPaddle>();
+SystemGraphics graphicsSystem = new SystemGraphics()
+    .RegisterDrawable<ComponentGraphicsBall>()
+    .RegisterDrawable<ComponentGraphicsWall>()
+    .RegisterDrawable<ComponentGraphicsPaddle>();
 
-Engine engine = new EngineBuilder()
+var engine = new EngineBuilder()
   .AddSystem(graphicsSystem)
   .AddSystem(new SystemSdl())
   .AddSystem(new SystemSdlRenderer())
@@ -26,6 +26,8 @@ Engine engine = new EngineBuilder()
   .AddSystem(new SystemBreakout())
   .AddSystem(new SystemMainLoop())
   .Build();
+  
+engine.Start();
 ```
 
 System communication is carried out by component data, component listeners and a messagebus.
