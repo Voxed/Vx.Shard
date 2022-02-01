@@ -49,6 +49,6 @@ public class WorldShould
         Assert.Equal(
             entitiesWithComponent.ToList().Select(e => e.Id).OrderBy(e => e).ToList(),
             _world.GetEntitiesWith<TestComponent>().ToList().Select(e => e.Id).OrderBy(e => e).ToList()
-            );
+        );
     }
 }
