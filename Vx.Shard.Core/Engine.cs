@@ -1,6 +1,9 @@
 // Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
 // License TBD.
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
 namespace Vx.Shard.Core;
 
 /// <summary>
@@ -11,7 +14,7 @@ public class Engine
 {
     private readonly World _world;
     private readonly List<ISystem> _systems;
-    private bool _started = false;
+    private bool _started;
 
     /// <summary>
     /// Constructs an engine from the chosen systems.

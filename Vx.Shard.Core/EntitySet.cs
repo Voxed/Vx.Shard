@@ -1,6 +1,9 @@
 // Copyright (c) Petter Blomkvist (aka. Voxed). All rights reserved.
 // License TBD.
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
 namespace Vx.Shard.Core;
 
 using System.Collections;
@@ -73,7 +76,7 @@ public class EntitySetEnumerator : IEnumerator<Entity>
     public bool MoveNext()
     {
         _position++;
-        return (_position < _entities.Count);
+        return _position < _entities.Count;
     }
 
     public void Reset()

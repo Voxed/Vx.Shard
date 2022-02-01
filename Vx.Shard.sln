@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Graphics", "Vx.Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Common", "Vx.Shard.Common\Vx.Shard.Common.csproj", "{90C123BE-3BA6-4A3C-92A2-0EC567F69E5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Core.Specs", "Vx.Shard.Core.Specs\Vx.Shard.Core.Specs.csproj", "{9B573623-289A-49F1-A43C-EE0029007726}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{90C123BE-3BA6-4A3C-92A2-0EC567F69E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90C123BE-3BA6-4A3C-92A2-0EC567F69E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90C123BE-3BA6-4A3C-92A2-0EC567F69E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B573623-289A-49F1-A43C-EE0029007726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B573623-289A-49F1-A43C-EE0029007726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B573623-289A-49F1-A43C-EE0029007726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B573623-289A-49F1-A43C-EE0029007726}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
