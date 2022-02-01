@@ -7,11 +7,8 @@ using Vx.Shard.Common;
 
 Console.WriteLine(Directory.GetCurrentDirectory());
 
-var graphicsSystem = new SystemGraphics()
-    .RegisterDrawable<ClientTestComponent>();
-
 var engine = new EngineBuilder()
-.AddSystem(graphicsSystem)
+.AddSystem(new SystemGraphics())
 .AddSystem(new SystemSdl())
 .AddSystem(new SystemSdlRenderer())
 .AddSystem(new TestSystem())

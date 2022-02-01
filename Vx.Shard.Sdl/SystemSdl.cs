@@ -17,6 +17,11 @@ public class SystemSdl : ISystem
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
     }
 
+    public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
+    {
+        componentRegistry.Register<ComponentSdl>();
+    }
+
     public void Initialize(World world)
     {
         SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING);

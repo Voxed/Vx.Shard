@@ -4,6 +4,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
+
 namespace Vx.Shard.Core;
 
 /// <summary>
@@ -12,6 +13,7 @@ namespace Vx.Shard.Core;
 public class Entity
 {
     private readonly ComponentStore _store;
+    private readonly ComponentRegistry _componentRegistry;
 
     /// <summary>
     /// The numerical id of the entity.
@@ -23,10 +25,11 @@ public class Entity
     /// </summary>
     /// <param name="id">The entity id.</param>
     /// <param name="store">The component store of the entity.</param>
-    internal Entity(int id, ComponentStore store)
+    internal Entity(int id, ComponentStore store, ComponentRegistry componentRegistry)
     {
         Id = id;
         _store = store;
+        _componentRegistry = componentRegistry;
     }
 
     /// <summary>
@@ -35,9 +38,11 @@ public class Entity
     /// </summary>
     /// <param name="component">The component to add.</param>
     /// <typeparam name="T">The type of the component</typeparam>
-    public void AddComponent<T>(T component) where T : IComponent
+    public Entity AddComponent<T>(T component) where T : IComponent
     {
-        _store.AddComponent(Id, component);
+        var componentId = _componentRegistry.GetComponentId<T>();
+        _store.AddComponent(componentId, Id, component);
+        return this;
     }
 
     /// <summary>
@@ -45,9 +50,11 @@ public class Entity
     /// If the component doesn't exist on the entity, this does nothing.
     /// </summary>
     /// <typeparam name="T">The type of the component to remove.</typeparam>
-    public void RemoveComponent<T>() where T : IComponent
+    public Entity RemoveComponent<T>() where T : IComponent
     {
-        _store.RemoveComponent<T>(Id);
+        var componentId = _componentRegistry.GetComponentId<T>();
+        _store.RemoveComponent(componentId, Id);
+        return this;
     }
 
     /// <summary>
@@ -58,6 +65,7 @@ public class Entity
     /// <returns>The component if it exists, otherwise null.</returns>
     public T? GetComponent<T>() where T : IComponent
     {
-        return _store.GetComponent<T>(Id);
+        var componentId = _componentRegistry.GetComponentId<T>();
+        return (T?) _store.GetComponent(componentId, Id);
     }
 }

@@ -16,7 +16,7 @@ internal interface IMessageBusListener
     /// </summary>
     /// <param name="message">The message.</param>
     /// <typeparam name="T">The type of the message.</typeparam>
-    public void OnMessage<T>(T message) where T : IMessage;
+    public void OnMessage(int messageId, IMessage message);
 }
 
 /// <summary>
@@ -40,9 +40,8 @@ internal class MessageBus
     /// Send a message onto the message bus.
     /// </summary>
     /// <param name="message">The message.</param>
-    /// <typeparam name="T">The type of the message.</typeparam>
-    internal void Send<T>(T message) where T : IMessage
+    internal void Send(int messageId, IMessage message)
     {
-        _listener?.OnMessage(message);
+        _listener?.OnMessage(messageId, message);
     }
 }

@@ -30,7 +30,7 @@ public class SystemSdlRenderer : ISystem
         var img = SDL_image.IMG_Load(path);
 
         Console.WriteLine(SDL_image.IMG_GetError());
-        
+
         _spriteBuffer[path] = SDL.SDL_CreateTextureFromSurface(rend, img);
 
         SDL.SDL_SetTextureBlendMode(_spriteBuffer[path], SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
@@ -65,7 +65,7 @@ public class SystemSdlRenderer : ISystem
         {
             SDL.SDL_Rect sRect;
             SDL.SDL_Rect tRect;
-            
+
             var spr = context.Sys!.LoadTexture(sprite.TexturePath!, out var w, out var h, context.Renderer);
 
             sRect.x = 0;
@@ -83,6 +83,10 @@ public class SystemSdlRenderer : ISystem
         }
     }
 
+    public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
+    {
+    }
+
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
@@ -95,7 +99,7 @@ public class SystemSdlRenderer : ISystem
 
     private void Update(World world, MessageUpdate message)
     {
-        foreach(var e in world.GetEntitiesWith<ComponentSdl>())
+        foreach (var e in world.GetEntitiesWith<ComponentSdl>())
         {
             var context = new DrawableVisitorSdlContext
             {
@@ -105,7 +109,7 @@ public class SystemSdlRenderer : ISystem
 
             SDL.SDL_SetRenderDrawColor(context.Renderer, 0, 0, 0, 255);
             SDL.SDL_RenderClear(context.Renderer);
-            foreach(var entity in world.GetEntitiesWith<ComponentGraphicsScene>())
+            foreach (var entity in world.GetEntitiesWith<ComponentGraphicsScene>())
             {
                 var scene = entity.GetComponent<ComponentGraphicsScene>()!;
                 var root = scene.Root;

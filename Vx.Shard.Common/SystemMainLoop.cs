@@ -11,6 +11,12 @@ using Core;
 /// </summary>
 public class SystemMainLoop : ISystem
 {
+    public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
+    {
+        messageRegistry.Register<MessageUpdate>();
+        componentRegistry.Register<ComponentMainLoop>();
+    }
+
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {

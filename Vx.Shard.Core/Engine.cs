@@ -24,10 +24,21 @@ public class Engine
         List<ISystem> systems)
     {
         _systems = systems;
-        MessageBusListenerBuilder messageBusListenerBuilder = new();
-        ComponentStoreListenerBuilder componentStoreListenerBuilder = new();
-        _systems.ForEach(system => system.Configure(messageBusListenerBuilder, componentStoreListenerBuilder));
-        _world = new World();
+        ComponentRegistry componentRegistry = new();
+        MessageRegistry messageRegistry = new();
+        _systems.ForEach(system =>
+        {
+            Console.WriteLine("> Registering system {0}:", system.GetType().Name);
+            system.Register(messageRegistry, componentRegistry);
+        });
+        MessageBusListenerBuilder messageBusListenerBuilder = new(messageRegistry);
+        ComponentStoreListenerBuilder componentStoreListenerBuilder = new(componentRegistry);
+        _systems.ForEach(system =>
+        {
+            Console.WriteLine("> Configuring system {0}:", system.GetType().Name);
+            system.Configure(messageBusListenerBuilder, componentStoreListenerBuilder);
+        });
+        _world = new World(componentRegistry, messageRegistry);
         _world.ComponentStore.SetListener(componentStoreListenerBuilder.Build(_world));
         _world.MessageBus.SetListener(messageBusListenerBuilder.Build(_world));
     }
@@ -37,6 +48,7 @@ public class Engine
     /// </summary>
     public void Start()
     {
+        Console.WriteLine("> Starting engine...");
         _systems.ForEach(system => system.Initialize(_world));
         _started = true;
     }

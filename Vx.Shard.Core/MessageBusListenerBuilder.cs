@@ -4,6 +4,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
+
 namespace Vx.Shard.Core;
 
 /// <summary>
@@ -16,19 +17,22 @@ public class MessageBusListenerBuilder
     private class ConcreteMessageBusListener : IMessageBusListener
     {
         private readonly World _world;
-        private readonly Dictionary<Type, List<object>> _callbacks;
+        private readonly Dictionary<int, List<Action<World, IMessage>>> _callbacks;
+        private readonly MessageRegistry _messageRegistry;
 
-        public ConcreteMessageBusListener(World world, Dictionary<Type, List<object>> callbacks)
+        public ConcreteMessageBusListener(World world, Dictionary<int, List<Action<World, IMessage>>> callbacks,
+            MessageRegistry messageRegistry)
         {
             _world = world;
             _callbacks = callbacks;
+            _messageRegistry = messageRegistry;
         }
 
-        public void OnMessage<T>(T message) where T : IMessage
+        public void OnMessage(int componentId, IMessage message)
         {
-            if (_callbacks.ContainsKey(typeof(T)))
+            if (_callbacks.ContainsKey(componentId))
             {
-                _callbacks[typeof(T)].ForEach(cb => { ((Callback<T>) cb)(_world, message); });
+                _callbacks[componentId].ForEach(cb => { cb(_world, message); });
             }
         }
     }
@@ -39,7 +43,13 @@ public class MessageBusListenerBuilder
     /// <typeparam name="T"></typeparam>
     public delegate void Callback<in T>(World world, T message);
 
-    private readonly Dictionary<Type, List<object>> _callbacks = new();
+    private readonly Dictionary<int, List<Action<World, IMessage>>> _callbacks = new();
+    private readonly MessageRegistry _messageRegistry = new();
+
+    public MessageBusListenerBuilder(MessageRegistry messageRegistry)
+    {
+        _messageRegistry = messageRegistry;
+    }
 
     /// <summary>
     /// Add a callback to the message bus listener for a specific message type.
@@ -49,12 +59,17 @@ public class MessageBusListenerBuilder
     /// <returns>Self to allow for method chaining.</returns>
     public MessageBusListenerBuilder AddCallback<T>(Callback<T> callback) where T : IMessage
     {
-        if (!_callbacks.ContainsKey(typeof(T)))
+        var messageId = _messageRegistry.GetMessageId<T>();
+
+        if (messageId == 0)
+            return this;
+
+        if (!_callbacks.ContainsKey(messageId))
         {
-            _callbacks.Add(typeof(T), new List<object>());
+            _callbacks.Add(messageId, new List<Action<World, IMessage>>());
         }
 
-        _callbacks[typeof(T)].Add(callback);
+        _callbacks[messageId].Add((world, message) => callback(world, (T) message));
 
         return this;
     }
@@ -66,6 +81,6 @@ public class MessageBusListenerBuilder
     /// <returns>The new IMessageBusListener.</returns>
     internal IMessageBusListener Build(World world)
     {
-        return new ConcreteMessageBusListener(world, _callbacks);
+        return new ConcreteMessageBusListener(world, _callbacks, _messageRegistry);
     }
 }

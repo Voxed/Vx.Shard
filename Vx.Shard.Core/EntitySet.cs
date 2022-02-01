@@ -4,6 +4,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
+
 namespace Vx.Shard.Core;
 
 using System.Collections;
@@ -15,16 +16,18 @@ public class EntitySet : IEnumerable<Entity>
 {
     private readonly List<int> _entities;
     private readonly ComponentStore _store;
+    private readonly ComponentRegistry _componentRegistry;
 
     /// <summary>
     /// Construct a new entity set from a list of entity ids and the component store they exist in.
     /// </summary>
     /// <param name="entities">The entity ids.</param>
     /// <param name="store">The component store where the entities reside.</param>
-    internal EntitySet(List<int> entities, ComponentStore store)
+    internal EntitySet(List<int> entities, ComponentStore store, ComponentRegistry componentRegistry)
     {
         _entities = entities;
         _store = store;
+        _componentRegistry = componentRegistry;
     }
 
     /// <summary>
@@ -33,7 +36,7 @@ public class EntitySet : IEnumerable<Entity>
     /// <returns>The entity enumerator.</returns>
     public IEnumerator<Entity> GetEnumerator()
     {
-        return new EntitySetEnumerator(_entities, _store);
+        return new EntitySetEnumerator(_entities, _store, _componentRegistry);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -48,7 +51,9 @@ public class EntitySet : IEnumerable<Entity>
     /// <returns>A new set with entities who have the specified component.s</returns>
     public EntitySet With<T>() where T : IComponent
     {
-        return new EntitySet(_store.GetEntitiesWith<T>().Intersect(_entities).ToList(), _store);
+        var componentId = _componentRegistry.GetComponentId<T>();
+        return new EntitySet(_store.GetEntitiesWith(componentId).Intersect(_entities).ToList(), _store,
+            _componentRegistry);
     }
 }
 
@@ -57,6 +62,7 @@ public class EntitySet : IEnumerable<Entity>
 /// </summary>
 public class EntitySetEnumerator : IEnumerator<Entity>
 {
+    private readonly ComponentRegistry _componentRegistry;
     private readonly ComponentStore _store;
     private readonly List<int> _entities;
     private int _position = -1;
@@ -66,10 +72,11 @@ public class EntitySetEnumerator : IEnumerator<Entity>
     /// </summary>
     /// <param name="list">The entities.</param>
     /// <param name="store">The component store.</param>
-    internal EntitySetEnumerator(List<int> list, ComponentStore store)
+    internal EntitySetEnumerator(List<int> list, ComponentStore store, ComponentRegistry componentRegistry)
     {
         _entities = list;
         _store = store;
+        _componentRegistry = componentRegistry;
     }
 
     // Below follows standard implemented enumerator methods.
@@ -83,10 +90,10 @@ public class EntitySetEnumerator : IEnumerator<Entity>
     {
         _position = -1;
     }
-    
+
     object IEnumerator.Current => Current;
 
-    public Entity Current => new(_entities[_position], _store);
+    public Entity Current => new(_entities[_position], _store, _componentRegistry);
 
     public void Dispose()
     {

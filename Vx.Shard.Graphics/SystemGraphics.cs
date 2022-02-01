@@ -7,41 +7,30 @@ using Core;
 
 public class SystemGraphics : ISystem
 {
-    private delegate void RegisterDrawableCallback(ComponentStoreListenerBuilder componentStoreListenerBuilder);
-
-    private readonly List<RegisterDrawableCallback> _registerDrawableCallbacks = new();
-
-    public SystemGraphics RegisterDrawable<T>() where T : IDrawableComponent, IComponent
+    public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
-        _registerDrawableCallbacks.Add(componentStoreListenerBuilder =>
-        {
-            componentStoreListenerBuilder.AddCallback<T>((
-                (world, entity) =>
-                {
-                    world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
-                    {
-                        e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(entity.GetComponent<T>()!
-                            .GetDrawable());
-                    });
-                },
-                (world, entity) =>
-                {
-                    world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
-                    {
-                        e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(entity.GetComponent<T>()!
-                            .GetDrawable());
-                    });
-                }
-            ));
-        });
-
-        return this;
+        componentRegistry.Register<ComponentGraphicsScene>();
     }
 
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        _registerDrawableCallbacks.ForEach(cb => cb(componentStoreListenerBuilder));
+        componentStoreListenerBuilder.AddSubclassCallback<IDrawableComponent>((
+            (world, entity, component) =>
+            {
+                world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
+                {
+                    e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(component.GetDrawable());
+                });
+            },
+            (world, entity, component) =>
+            {
+                world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
+                {
+                    e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(component.GetDrawable());
+                });
+            }
+        ));
     }
 
     public void Initialize(World world)

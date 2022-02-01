@@ -30,6 +30,8 @@ public class EngineBuilder
     /// <returns>The built engine.</returns>
     public Engine Build()
     {
-        return new Engine(_systems);
+        var engine = new Engine(_systems);
+        Console.WriteLine("> Engine finished");
+        return engine;
     }
 }

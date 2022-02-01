@@ -5,15 +5,21 @@ using Common;
 
 public class TestSystem : ISystem
 {
+    public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
+    {
+        componentRegistry.Register<ClientTestComponent>();
+        componentRegistry.Register<PositionComponent>();
+    }
+
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
         componentStoreListenerBuilder.AddCallback<PositionComponent>((
-            (_, entity) =>
+            (_, entity, _) =>
             {
                 entity.AddComponent(new ClientTestComponent());
-            }, (_, entity) => { entity.RemoveComponent<ClientTestComponent>(); }
+            }, (_, entity, _) => { entity.RemoveComponent<ClientTestComponent>(); }
         ));
     }
 

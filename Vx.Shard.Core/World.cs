@@ -4,6 +4,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
+
 namespace Vx.Shard.Core;
 
 /// <summary>
@@ -13,6 +14,14 @@ public class World
 {
     internal readonly MessageBus MessageBus = new();
     internal readonly ComponentStore ComponentStore = new();
+    private readonly ComponentRegistry _componentRegistry;
+    private readonly MessageRegistry _messageRegistry;
+
+    public World(ComponentRegistry componentRegistry, MessageRegistry messageRegistry)
+    {
+        _componentRegistry = componentRegistry;
+        _messageRegistry = messageRegistry;
+    }
 
     /// <summary>
     /// Send a message onto the world message bus.
@@ -21,7 +30,7 @@ public class World
     /// <typeparam name="T">The type of the message to send.</typeparam>
     public void Send<T>(T message) where T : IMessage
     {
-        MessageBus.Send(message);
+        MessageBus.Send(_messageRegistry.GetMessageId<T>(), message);
     }
 
     /// <summary>
@@ -30,7 +39,7 @@ public class World
     /// <returns>The entity created.</returns>
     public Entity CreateEntity()
     {
-        return new Entity(ComponentStore.CreateEntity(), ComponentStore);
+        return new Entity(ComponentStore.CreateEntity(), ComponentStore, _componentRegistry);
     }
 
     /// <summary>
@@ -40,6 +49,7 @@ public class World
     /// <returns>The entities with the requested component.</returns>
     public EntitySet GetEntitiesWith<T>() where T : IComponent
     {
-        return new EntitySet(ComponentStore.GetEntitiesWith<T>(), ComponentStore);
+        return new EntitySet(ComponentStore.GetEntitiesWith(_componentRegistry.GetComponentId<T>()), ComponentStore,
+            _componentRegistry);
     }
 }
