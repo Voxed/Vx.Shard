@@ -15,7 +15,7 @@ public class SystemGraphics : ISystem
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        componentStoreListenerBuilder.AddSubclassCallback<IDrawableComponent>((
+        componentStoreListenerBuilder.AddSubtypeCallback<IDrawableComponent>(
             (world, entity, component) =>
             {
                 world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
@@ -30,7 +30,7 @@ public class SystemGraphics : ISystem
                     e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(component.GetDrawable());
                 });
             }
-        ));
+        );
     }
 
     public void Initialize(World world)

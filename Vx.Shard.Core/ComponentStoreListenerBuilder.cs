@@ -18,13 +18,13 @@ public class ComponentStoreListenerBuilder
     {
         private readonly World _world;
 
-        private readonly Dictionary<int, List<(Action<World, Entity, IComponent>, Action<World, Entity, IComponent>)>>
+        private readonly Dictionary<int, List<(Action<World, Entity, IComponent>?, Action<World, Entity, IComponent>?)>>
             _callbacks;
 
         private readonly ComponentRegistry _componentRegistry;
 
         public ComponentStoreListener(World world,
-            Dictionary<int, List<(Action<World, Entity, IComponent>, Action<World, Entity, IComponent>)>> callbacks,
+            Dictionary<int, List<(Action<World, Entity, IComponent>?, Action<World, Entity, IComponent>?)>> callbacks,
             ComponentRegistry componentRegistry)
         {
             _world = world;
@@ -39,7 +39,7 @@ public class ComponentStoreListenerBuilder
                 _callbacks[componentId]
                     .ForEach(cb =>
                     {
-                        cb.Item1(_world, new Entity(entityId, _world.ComponentStore, _componentRegistry),
+                        cb.Item1?.Invoke(_world, new Entity(entityId, _world.ComponentStore, _componentRegistry),
                             component);
                     });
             }
@@ -52,7 +52,7 @@ public class ComponentStoreListenerBuilder
                 _callbacks[componentId]
                     .ForEach(cb =>
                     {
-                        cb.Item2(_world, new Entity(entityId, _world.ComponentStore, _componentRegistry),
+                        cb.Item2?.Invoke(_world, new Entity(entityId, _world.ComponentStore, _componentRegistry),
                             component);
                     });
             }
@@ -66,9 +66,8 @@ public class ComponentStoreListenerBuilder
     /// <param name="entity">The entity which the component was added/removed from.</param>
     public delegate void Callback<in T>(World world, Entity entity, T component);
 
-    private readonly Dictionary<int, List<(Action<World, Entity, IComponent>, Action<World, Entity, IComponent>)>>
-        _callbacks
-            = new();
+    private readonly Dictionary<int, List<(Action<World, Entity, IComponent>?, Action<World, Entity, IComponent>?)>>
+        _callbacks = new();
 
     private readonly ComponentRegistry _componentRegistry;
 
@@ -78,7 +77,7 @@ public class ComponentStoreListenerBuilder
     }
 
     private void AddCallback(int componentId,
-        (Action<World, Entity, IComponent>, Action<World, Entity, IComponent>) callback)
+        Action<World, Entity, IComponent>? creationCallback, Action<World, Entity, IComponent>? destructionCallback)
     {
         if (componentId == 0)
             return;
@@ -86,10 +85,10 @@ public class ComponentStoreListenerBuilder
         if (!_callbacks.ContainsKey(componentId))
         {
             _callbacks.Add(componentId,
-                new List<(Action<World, Entity, IComponent>, Action<World, Entity, IComponent>)>());
+                new List<(Action<World, Entity, IComponent>?, Action<World, Entity, IComponent>?)>());
         }
 
-        _callbacks[componentId].Add(callback);
+        _callbacks[componentId].Add((creationCallback, destructionCallback));
     }
 
     /// <summary>
@@ -99,29 +98,34 @@ public class ComponentStoreListenerBuilder
     /// destruction callback.</param>
     /// <typeparam name="T">The component type to invoke the callback for.</typeparam>
     /// <returns>Self to allow for method chaining.</returns>
-    public ComponentStoreListenerBuilder AddCallback<T>((Callback<T>, Callback<T>) callback) where T : IComponent
+    public ComponentStoreListenerBuilder AddCallback<T>(Callback<T>? creationCallback = null,
+        Callback<T>? destructionCallback = null)
+        where T : IComponent
     {
         var id = _componentRegistry.GetComponentId<T>();
         AddCallback(id,
-            ((world, entity, component) =>
-                {
-                    callback.Item1(world, entity, (T) component);
-                },
-                (world, entity, component) => { callback.Item2(world, entity, (T) component); }));
+            creationCallback != null
+                ? (world, entity, component) => { creationCallback(world, entity, (T) component); }
+                : null,
+            destructionCallback != null
+                ? (world, entity, component) => { destructionCallback(world, entity, (T) component); }
+                : null);
         Console.WriteLine("    * Configured callback for component {0} as {1}", id, typeof(T).Name);
         return this;
     }
 
-    public ComponentStoreListenerBuilder AddSubclassCallback<T>((Callback<T>, Callback<T>) callback)
+    public ComponentStoreListenerBuilder AddSubtypeCallback<T>(Callback<T>? creationCallback = null,
+        Callback<T>? destructionCallback = null)
     {
-        _componentRegistry.GetSubclassComponentIds<T>().ToList().ForEach(id =>
+        _componentRegistry.GetSubtypeComponentIds<T>().ToList().ForEach(id =>
         {
             AddCallback(id,
-                ((world, entity, component) =>
-                    {
-                        callback.Item1(world, entity, (T) component);
-                    },
-                    (world, entity, component) => { callback.Item2(world, entity, (T) component); }));
+                creationCallback != null
+                    ? (world, entity, component) => { creationCallback(world, entity, (T) component); }
+                    : null,
+                destructionCallback != null
+                    ? (world, entity, component) => { destructionCallback(world, entity, (T) component); }
+                    : null);
             Console.WriteLine("    * Configured callback for component {0} as {1}", id, typeof(T).Name);
         });
         return this;

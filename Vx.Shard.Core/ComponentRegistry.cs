@@ -22,7 +22,7 @@ public class ComponentRegistry
         return _components.ContainsKey(typeof(T)) ? _components[typeof(T)] : 0;
     }
 
-    internal int[] GetSubclassComponentIds<T>()
+    internal int[] GetSubtypeComponentIds<T>()
     {
         List<int> ids = new();
         foreach (var pair in _components)

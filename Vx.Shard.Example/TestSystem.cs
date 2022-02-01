@@ -15,12 +15,10 @@ public class TestSystem : ISystem
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
-        componentStoreListenerBuilder.AddCallback<PositionComponent>((
-            (_, entity, _) =>
-            {
-                entity.AddComponent(new ClientTestComponent());
-            }, (_, entity, _) => { entity.RemoveComponent<ClientTestComponent>(); }
-        ));
+        componentStoreListenerBuilder.AddCallback<PositionComponent>(
+            (_, entity, _) => { entity.AddComponent(new ClientTestComponent()); },
+            (_, entity, _) => { entity.RemoveComponent<ClientTestComponent>(); }
+        );
     }
 
     public void Initialize(World world)
@@ -41,10 +39,10 @@ public class TestSystem : ISystem
     private void Update(World world, MessageUpdate message)
     {
         var i = 0;
-        foreach(var e in world.GetEntitiesWith<ClientTestComponent>().With<PositionComponent>())
+        foreach (var e in world.GetEntitiesWith<ClientTestComponent>().With<PositionComponent>())
         {
             i++;
-            foreach(var e2 in world.GetEntitiesWith<ComponentMainLoop>())
+            foreach (var e2 in world.GetEntitiesWith<ComponentMainLoop>())
             {
                 e.GetComponent<ClientTestComponent>()!.Drawable.Position.X =
                     (int) (Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
