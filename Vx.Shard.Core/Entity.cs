@@ -10,7 +10,7 @@ namespace Vx.Shard.Core;
 /// <summary>
 /// An entity in the game world.
 /// </summary>
-public class Entity
+public readonly struct Entity
 {
     private readonly ComponentStore _store;
     private readonly ComponentRegistry _componentRegistry;

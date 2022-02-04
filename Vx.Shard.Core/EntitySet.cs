@@ -12,9 +12,9 @@ using System.Collections;
 /// <summary>
 /// A set of entities in the game world.
 /// </summary>
-public class EntitySet : IEnumerable<Entity>
+public readonly struct EntitySet : IEnumerable<Entity>
 {
-    private readonly List<int> _entities;
+    private readonly List<SortedDictionary<int, IComponent>.KeyCollection> _entityCollections;
     private readonly ComponentStore _store;
     private readonly ComponentRegistry _componentRegistry;
 
@@ -23,9 +23,20 @@ public class EntitySet : IEnumerable<Entity>
     /// </summary>
     /// <param name="entities">The entity ids.</param>
     /// <param name="store">The component store where the entities reside.</param>
-    internal EntitySet(List<int> entities, ComponentStore store, ComponentRegistry componentRegistry)
+    private EntitySet(List<SortedDictionary<int, IComponent>.KeyCollection> entityCollections, ComponentStore store,
+        ComponentRegistry componentRegistry)
     {
-        _entities = entities;
+        _entityCollections = entityCollections;
+        _store = store;
+        _componentRegistry = componentRegistry;
+    }
+
+    internal EntitySet(SortedDictionary<int, IComponent>.KeyCollection? entityCollections, ComponentStore store,
+        ComponentRegistry componentRegistry)
+    {
+        _entityCollections =
+            new List<SortedDictionary<int, IComponent>.KeyCollection>(entityCollections != null ? 1 : 0);
+        if (entityCollections != null) _entityCollections.Add(entityCollections);
         _store = store;
         _componentRegistry = componentRegistry;
     }
@@ -34,9 +45,20 @@ public class EntitySet : IEnumerable<Entity>
     /// Get an enumerator to enumerate over the entities in the set.
     /// </summary>
     /// <returns>The entity enumerator.</returns>
-    public IEnumerator<Entity> GetEnumerator()
+    public EntitySetEnumerator GetEnumerator()
     {
-        return new EntitySetEnumerator(_entities, _store, _componentRegistry);
+        var enumerators =
+            new List<SortedDictionary<int, IComponent>.KeyCollection.Enumerator>(_entityCollections.Count);
+        if (_entityCollections.Count <= 0) return new EntitySetEnumerator(enumerators, _store, _componentRegistry);
+        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var v in _entityCollections)
+            enumerators.Add(v.GetEnumerator());
+        return new EntitySetEnumerator(enumerators, _store, _componentRegistry);
+    }
+
+    IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -52,7 +74,17 @@ public class EntitySet : IEnumerable<Entity>
     public EntitySet With<T>() where T : IComponent
     {
         var componentId = _componentRegistry.GetComponentId<T>();
-        return new EntitySet(_store.GetEntitiesWith(componentId).Intersect(_entities).ToList(), _store,
+        var newCollection = _store.GetEntitiesWith(componentId);
+        if (newCollection == null) return this;
+        var newEntityCollections =
+            new List<SortedDictionary<int, IComponent>.KeyCollection>(_entityCollections.Count + 1);
+        foreach (var v in _entityCollections)
+        {
+            newEntityCollections.Add(v);
+        }
+
+        newEntityCollections.Add(newCollection);
+        return new EntitySet(newEntityCollections, _store,
             _componentRegistry);
     }
 }
@@ -60,40 +92,76 @@ public class EntitySet : IEnumerable<Entity>
 /// <summary>
 /// Enumerator of an EntitySet.
 /// </summary>
-public class EntitySetEnumerator : IEnumerator<Entity>
+public struct EntitySetEnumerator : IEnumerator<Entity>
 {
     private readonly ComponentRegistry _componentRegistry;
     private readonly ComponentStore _store;
-    private readonly List<int> _entities;
-    private int _position = -1;
+    private readonly SortedDictionary<int, IComponent>.KeyCollection.Enumerator[] _entities;
+    private int _currValue = -1;
+    private bool _done;
 
     /// <summary>
     /// Construct a new EntitySetEnumerator from entities and the component store where they reside.
     /// </summary>
     /// <param name="list">The entities.</param>
     /// <param name="store">The component store.</param>
-    internal EntitySetEnumerator(List<int> list, ComponentStore store, ComponentRegistry componentRegistry)
+    internal EntitySetEnumerator(List<SortedDictionary<int, IComponent>.KeyCollection.Enumerator> list,
+        ComponentStore store, ComponentRegistry componentRegistry)
     {
-        _entities = list;
+        _entities = list.ToArray();
         _store = store;
         _componentRegistry = componentRegistry;
+        _done = _entities.Length == 0;
     }
 
-    // Below follows standard implemented enumerator methods.
+    private (int, int) AllSame(int pos = 0)
+    {
+        if (_entities.Length == pos + 1) return (_entities[pos].Current, pos);
+
+        (int, int) allSame;
+        if (_entities[pos].Current == (allSame = AllSame(pos + 1)).Item1)
+            return (_entities[pos].Current, allSame.Item2);
+        return _entities[pos].Current < _entities[allSame.Item2].Current ? (-1, pos) : (-1, allSame.Item2);
+    }
+
     public bool MoveNext()
     {
-        _position++;
-        return _position < _entities.Count;
+        if (_done)
+            return false;
+
+        for (var i = 0; i < _entities.Length; i++)
+        {
+            if (!_entities[i].MoveNext())
+            {
+                _done = true;
+                return false;
+            }
+        }
+
+        (int, int) allSame;
+        while ((allSame = AllSame()).Item1 == -1)
+        {
+            if (_entities[allSame.Item2].MoveNext()) continue;
+            _done = true;
+            return false;
+        }
+
+        _currValue = allSame.Item1;
+
+        return true;
     }
 
     public void Reset()
     {
-        _position = -1;
+        throw new InvalidOperationException();
     }
 
     object IEnumerator.Current => Current;
 
-    public Entity Current => new(_entities[_position], _store, _componentRegistry);
+    public Entity Current =>
+        _done || _currValue == -1
+            ? throw new InvalidOperationException()
+            : new Entity(_currValue, _store, _componentRegistry);
 
     public void Dispose()
     {

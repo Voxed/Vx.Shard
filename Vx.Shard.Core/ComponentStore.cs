@@ -30,7 +30,7 @@ internal interface IComponentStoreListener
 /// </summary>
 internal class ComponentStore
 {
-    private readonly Dictionary<int, Dictionary<int, IComponent>> _components = new();
+    private readonly Dictionary<int, SortedDictionary<int, IComponent>> _components = new();
     private int _nextEntityId;
     private IComponentStoreListener? _listener;
 
@@ -62,7 +62,7 @@ internal class ComponentStore
     internal void AddComponent(int componentId, int entityId, IComponent component)
     {
         if (!_components.ContainsKey(componentId))
-            _components.Add(componentId, new Dictionary<int, IComponent>());
+            _components.Add(componentId, new SortedDictionary<int, IComponent>());
         var entityComponentStore = _components[componentId];
         if (entityComponentStore.ContainsKey(entityId)) return;
         entityComponentStore.Add(entityId, component);
@@ -102,8 +102,8 @@ internal class ComponentStore
     /// </summary>
     /// <typeparam name="T">The type of the component to query for.</typeparam>
     /// <returns>The entities which have the specified component.</returns>
-    internal List<int> GetEntitiesWith(int componentId)
+    internal SortedDictionary<int, IComponent>.KeyCollection? GetEntitiesWith(int componentId)
     {
-        return _components.ContainsKey(componentId) ? _components[componentId].Keys.ToList() : new List<int>();
+        return _components.ContainsKey(componentId) ? _components[componentId].Keys : default;
     }
 }

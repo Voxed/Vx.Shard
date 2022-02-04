@@ -49,7 +49,8 @@ public class World
     /// <returns>The entities with the requested component.</returns>
     public EntitySet GetEntitiesWith<T>() where T : IComponent
     {
-        return new EntitySet(ComponentStore.GetEntitiesWith(_componentRegistry.GetComponentId<T>()), ComponentStore,
+        return new EntitySet(
+            ComponentStore.GetEntitiesWith(_componentRegistry.GetComponentId<T>()), ComponentStore,
             _componentRegistry);
     }
 }
