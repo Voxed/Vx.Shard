@@ -11,6 +11,11 @@ namespace Vx.Shard.Core;
 /// </summary>
 public interface ISystem
 {
+    /// <summary>
+    /// Register messages and components connected to the system.
+    /// </summary>
+    /// <param name="messageRegistry">The message registry.</param>
+    /// <param name="componentRegistry">The component registry.</param>
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry);
 
     /// <summary>

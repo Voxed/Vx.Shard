@@ -25,6 +25,7 @@ public readonly struct Entity
     /// </summary>
     /// <param name="id">The entity id.</param>
     /// <param name="store">The component store of the entity.</param>
+    /// <param name="componentRegistry">The component registry to use.</param>
     internal Entity(int id, ComponentStore store, ComponentRegistry componentRegistry)
     {
         Id = id;

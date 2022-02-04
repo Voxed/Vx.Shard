@@ -4,7 +4,6 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Vx.Shard.Core.Specs")]
-
 namespace Vx.Shard.Core;
 
 using System.Collections;
@@ -17,12 +16,7 @@ public readonly struct EntitySet : IEnumerable<Entity>
     private readonly List<SortedDictionary<int, IComponent>.KeyCollection> _entityCollections;
     private readonly ComponentStore _store;
     private readonly ComponentRegistry _componentRegistry;
-
-    /// <summary>
-    /// Construct a new entity set from a list of entity ids and the component store they exist in.
-    /// </summary>
-    /// <param name="entities">The entity ids.</param>
-    /// <param name="store">The component store where the entities reside.</param>
+    
     private EntitySet(List<SortedDictionary<int, IComponent>.KeyCollection> entityCollections, ComponentStore store,
         ComponentRegistry componentRegistry)
     {
@@ -31,12 +25,18 @@ public readonly struct EntitySet : IEnumerable<Entity>
         _componentRegistry = componentRegistry;
     }
 
-    internal EntitySet(SortedDictionary<int, IComponent>.KeyCollection? entityCollections, ComponentStore store,
+    /// <summary>
+    /// Construct a new entity set from a list of entity ids and the component store they exist in.
+    /// </summary>
+    /// <param name="entities">The entity ids.</param>
+    /// <param name="store">The component store where the entities reside.</param>
+    /// <param name="componentRegistry">The component registry to use.</param>
+    internal EntitySet(SortedDictionary<int, IComponent>.KeyCollection? entities, ComponentStore store,
         ComponentRegistry componentRegistry)
     {
         _entityCollections =
-            new List<SortedDictionary<int, IComponent>.KeyCollection>(entityCollections != null ? 1 : 0);
-        if (entityCollections != null) _entityCollections.Add(entityCollections);
+            new List<SortedDictionary<int, IComponent>.KeyCollection>(entities != null ? 1 : 0);
+        if (entities != null) _entityCollections.Add(entities);
         _store = store;
         _componentRegistry = componentRegistry;
     }
@@ -101,10 +101,12 @@ public struct EntitySetEnumerator : IEnumerator<Entity>
     private bool _done;
 
     /// <summary>
-    /// Construct a new EntitySetEnumerator from entities and the component store where they reside.
+    /// Construct a new EntitySetEnumerator from different entity collections to intersect and the component store
+    /// where they reside.
     /// </summary>
-    /// <param name="list">The entities.</param>
+    /// <param name="list">The entity collections to intersect.</param>
     /// <param name="store">The component store.</param>
+    /// <param name="componentRegistry">The component registry to use.</param>
     internal EntitySetEnumerator(List<SortedDictionary<int, IComponent>.KeyCollection.Enumerator> list,
         ComponentStore store, ComponentRegistry componentRegistry)
     {

@@ -94,8 +94,8 @@ public class ComponentStoreListenerBuilder
     /// <summary>
     /// Add a creation and a destruction callbacks to the component store listener for a specific component type.
     /// </summary>
-    /// <param name="callback">The callbacks to add, the first item is the creation callback, the second is the
-    /// destruction callback.</param>
+    /// <param name="creationCallback">The creation callback.</param>
+    /// <param name="destructionCallback">The destruction callback.</param>
     /// <typeparam name="T">The component type to invoke the callback for.</typeparam>
     /// <returns>Self to allow for method chaining.</returns>
     public ComponentStoreListenerBuilder AddCallback<T>(Callback<T>? creationCallback = null,

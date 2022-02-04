@@ -14,8 +14,8 @@ internal interface IMessageBusListener
     /// <summary>
     /// This method is invoked whenever a message is transmitted on the message bus.
     /// </summary>
+    /// <param name="messageId">The id of the message received.</param>
     /// <param name="message">The message.</param>
-    /// <typeparam name="T">The type of the message.</typeparam>
     public void OnMessage(int messageId, IMessage message);
 }
 
@@ -39,6 +39,7 @@ internal class MessageBus
     /// <summary>
     /// Send a message onto the message bus.
     /// </summary>
+    /// <param name="messageId">The id of the message received.</param>
     /// <param name="message">The message.</param>
     internal void Send(int messageId, IMessage message)
     {

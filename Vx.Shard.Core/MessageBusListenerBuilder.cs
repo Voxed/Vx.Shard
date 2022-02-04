@@ -18,21 +18,18 @@ public class MessageBusListenerBuilder
     {
         private readonly World _world;
         private readonly Dictionary<int, List<Action<World, IMessage>>> _callbacks;
-        private readonly MessageRegistry _messageRegistry;
 
-        public ConcreteMessageBusListener(World world, Dictionary<int, List<Action<World, IMessage>>> callbacks,
-            MessageRegistry messageRegistry)
+        public ConcreteMessageBusListener(World world, Dictionary<int, List<Action<World, IMessage>>> callbacks)
         {
             _world = world;
             _callbacks = callbacks;
-            _messageRegistry = messageRegistry;
         }
 
-        public void OnMessage(int componentId, IMessage message)
+        public void OnMessage(int messageId, IMessage message)
         {
-            if (_callbacks.ContainsKey(componentId))
+            if (_callbacks.ContainsKey(messageId))
             {
-                _callbacks[componentId].ForEach(cb => { cb(_world, message); });
+                _callbacks[messageId].ForEach(cb => { cb(_world, message); });
             }
         }
     }
@@ -40,12 +37,16 @@ public class MessageBusListenerBuilder
     /// <summary>
     /// A callback used for message handling.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of the message.</typeparam>
     public delegate void Callback<in T>(World world, T message);
 
     private readonly Dictionary<int, List<Action<World, IMessage>>> _callbacks = new();
-    private readonly MessageRegistry _messageRegistry = new();
+    private readonly MessageRegistry _messageRegistry;
 
+    /// <summary>
+    /// Construct a new message bus listener builder.
+    /// </summary>
+    /// <param name="messageRegistry">The message registry to use.</param>
     public MessageBusListenerBuilder(MessageRegistry messageRegistry)
     {
         _messageRegistry = messageRegistry;
@@ -81,6 +82,6 @@ public class MessageBusListenerBuilder
     /// <returns>The new IMessageBusListener.</returns>
     internal IMessageBusListener Build(World world)
     {
-        return new ConcreteMessageBusListener(world, _callbacks, _messageRegistry);
+        return new ConcreteMessageBusListener(world, _callbacks);
     }
 }

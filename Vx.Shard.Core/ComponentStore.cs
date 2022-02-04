@@ -15,13 +15,17 @@ internal interface IComponentStoreListener
     /// <summary>
     /// This method is invoked after a component is added to an entity.
     /// </summary>
+    /// <param name="componentId">The id of the component added.</param>
     /// <param name="entityId">The id of the entity which the component was added to.</param>
-    public void OnCreation(int componentId, int entityId, IComponent componet);
+    /// <param name="component">The data of the component going to be destroyed.</param>
+    public void OnCreation(int componentId, int entityId, IComponent component);
 
     /// <summary>
     /// This method is invoked before a component is removed from an entity.
     /// </summary>
+    /// <param name="componentId">The id of the component going to be destroyed.</param>
     /// <param name="entityId">The id of the entity which the component will be removed from.</param>
+    /// <param name="component">The data of the component going to be destroyed.</param>
     public void OnDestruction(int componentId, int entityId, IComponent component);
 }
 
@@ -57,6 +61,7 @@ internal class ComponentStore
     /// Add a component to an entity.
     /// If a component of the same type already exists on the entity, it won't be added.
     /// </summary>
+    /// <param name="componentId">The id of the component to add.</param>
     /// <param name="entityId">The entity to add the component to.</param>
     /// <param name="component">The component to add.</param>
     internal void AddComponent(int componentId, int entityId, IComponent component)
@@ -73,6 +78,7 @@ internal class ComponentStore
     /// Remove a component from an entity.
     /// If the component does not exist on the entity, nothing will happen.
     /// </summary>
+    /// <param name="componentId">The id of the component to remove.</param>
     /// <param name="entityId">The entity to remove the component from.</param>
     internal void RemoveComponent(int componentId, int entityId)
     {
@@ -87,6 +93,7 @@ internal class ComponentStore
     /// Get a component from an entity.
     /// If the component does not exist on the entity, null will be returned.
     /// </summary>
+    /// <param name="componentId">The id of the component to get.</param>
     /// <param name="entityId">The entity to get the component from.</param>
     /// <returns>The component, null if the component doesn't exist.</returns>
     internal IComponent? GetComponent(int componentId, int entityId)
@@ -100,7 +107,7 @@ internal class ComponentStore
     /// Get all entities with a specific component from storage.
     /// Because of the internal structure, this is very fast.
     /// </summary>
-    /// <typeparam name="T">The type of the component to query for.</typeparam>
+    /// <param name="componentId">The id of the component to query for.</param>
     /// <returns>The entities which have the specified component.</returns>
     internal SortedDictionary<int, IComponent>.KeyCollection? GetEntitiesWith(int componentId)
     {

@@ -17,6 +17,11 @@ public class World
     private readonly ComponentRegistry _componentRegistry;
     private readonly MessageRegistry _messageRegistry;
 
+    /// <summary>
+    /// Construct a new world from registries.
+    /// </summary>
+    /// <param name="componentRegistry">The component registry to use.</param>
+    /// <param name="messageRegistry">The message registry to use.</param>
     public World(ComponentRegistry componentRegistry, MessageRegistry messageRegistry)
     {
         _componentRegistry = componentRegistry;
