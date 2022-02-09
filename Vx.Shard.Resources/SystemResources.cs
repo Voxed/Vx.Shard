@@ -4,8 +4,13 @@ namespace Vx.Shard.Resources;
 
 public class SystemResources : ISystem
 {
+    private readonly Dictionary<string, int> _resourceCounter = new();
+    private readonly Dictionary<string, IResource> _resources = new();
+
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
+        messageRegistry.Register<MessageLoadResource>();
+        messageRegistry.Register<MessageUnloadResource>();
     }
 
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
@@ -16,28 +21,42 @@ public class SystemResources : ISystem
             {
                 foreach (var res in component.GetResources())
                 {
-                    var resInit = new ResourceInitializer
+                    _resourceCounter.TryGetValue(res.Path, out var resCount);
+                    if (resCount > 0)
                     {
-                        Path = res.Path,
-                        Type = res.Type
-                    };
-                    world.Send(new MessageLoadResource
+                        res.Resource = _resources[res.Path];
+                    }
+                    else
                     {
-                        Initializer = resInit
-                    });
-                    if (resInit.Resource == null)
-                        throw new NullReferenceException($"Failed to initialize resource: {resInit.Path}");
-                    res.Resource = resInit.Resource;
+                        var resInit = new ResourceInitializer
+                        {
+                            Path = res.Path,
+                            Type = res.Type
+                        };
+                        world.Send(new MessageLoadResource
+                        {
+                            Initializer = resInit
+                        });
+                        if (resInit.Resource == null)
+                            throw new NullReferenceException($"Failed to initialize resource: {resInit.Path}");
+                        res.Resource = resInit.Resource;
+                        _resources[res.Path] = resInit.Resource;
+                    }
+                    _resourceCounter[res.Path] = resCount + 1;
                 }
             },
             (world, entity, component) =>
             {
                 foreach (var res in component.GetResources())
                 {
-                    world.Send(new MessageUnloadResource
+                    _resourceCounter[res.Path]--;
+                    if (_resourceCounter[res.Path] <= 0)
                     {
-                        Path = res.Path
-                    });
+                        world.Send(new MessageUnloadResource
+                        {
+                            Resource = res.Resource!
+                        });
+                    }
                 }
             });
     }

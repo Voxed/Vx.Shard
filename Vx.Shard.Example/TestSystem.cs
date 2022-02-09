@@ -20,13 +20,13 @@ public class TestSystem : ISystem
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
         componentStoreListenerBuilder.AddCallback<PositionComponent>(
-            (_, entity, _) =>
+            (_, entity, component) =>
             {
                 entity.AddComponent(new ResRef
                 {   
                     Test = new ResourceReference
                     {
-                        Path = "test.png",
+                        Path = component.Index % 2 == 0 ? "test.png" : "test2.png",
                         Type = typeof(ResourceTexture)
                     }
                 });
@@ -52,7 +52,8 @@ public class TestSystem : ISystem
             entity.AddComponent(new PositionComponent
             {
                 X = 12,
-                Y = 34
+                Y = 34,
+                Index = i
             });
             entity.GetComponent<PositionComponent>()!.X = 43;
         }

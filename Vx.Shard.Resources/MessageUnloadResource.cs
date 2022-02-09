@@ -4,5 +4,5 @@ namespace Vx.Shard.Resources;
 
 public record MessageUnloadResource : IMessage
 {
-    public string Path { get; init; }
+    public IResource Resource { get; init; }
 }

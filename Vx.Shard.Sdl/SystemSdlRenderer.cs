@@ -1,3 +1,5 @@
+using Vx.Shard.Resources;
+
 namespace Vx.Shard.Sdl;
 
 using Core;
@@ -8,37 +10,6 @@ using Graphics;
 // TODO: Remake this entire class
 public class SystemSdlRenderer : ISystem
 {
-    private readonly Dictionary<string, IntPtr> _spriteBuffer = new();
-
-    private IntPtr LoadTexture(string path, out int w, out int h, IntPtr rend)
-    {
-        var ret = LoadTexture(path, rend);
-
-        SDL.SDL_QueryTexture(ret, out _, out _, out w, out h);
-
-        return ret;
-    }
-
-
-    private IntPtr LoadTexture(string path, IntPtr rend)
-    {
-        if (_spriteBuffer.ContainsKey(path))
-        {
-            return _spriteBuffer[path];
-        }
-
-        var img = SDL_image.IMG_Load(path);
-
-        Console.WriteLine(SDL_image.IMG_GetError());
-
-        _spriteBuffer[path] = SDL.SDL_CreateTextureFromSurface(rend, img);
-
-        SDL.SDL_SetTextureBlendMode(_spriteBuffer[path], SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
-
-        return img;
-    }
-
-
     private record DrawableVisitorSdlContext
     {
         public IntPtr Renderer;
@@ -94,6 +65,7 @@ public class SystemSdlRenderer : ISystem
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
+        messageBusListenerBuilder.AddCallback<MessageLoadResource>(LoadTexture);
     }
 
     public void Initialize(World world)
@@ -120,6 +92,35 @@ public class SystemSdlRenderer : ISystem
             }
 
             SDL.SDL_RenderPresent(context.Renderer);
+        }
+    }
+
+    private void LoadTexture(World world, MessageLoadResource messageLoadResource)
+    {
+        if (messageLoadResource.Initializer.Type != typeof(ResourceTexture))
+            return;
+        
+        foreach (var entity in world.GetEntitiesWith<ComponentSdl>())
+        {
+            var img = SDL_image.IMG_Load(messageLoadResource.Initializer.Path);
+
+            Console.WriteLine(SDL_image.IMG_GetError());
+            Console.WriteLine($"Loading texture: {messageLoadResource.Initializer.Path}");
+
+            var texture = SDL.SDL_CreateTextureFromSurface(entity.GetComponent<ComponentSdl>()!.Renderer, img);
+
+            SDL.SDL_SetTextureBlendMode(texture, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
+
+            SDL.SDL_QueryTexture(texture, out _, out _, out var width, out var height);
+
+            var resourceTexture = new ResourceTextureSdl
+            {
+                Texture = texture,
+                Width = width,
+                Height = height
+            };
+
+            messageLoadResource.Initializer.Resource = resourceTexture;
         }
     }
 }
