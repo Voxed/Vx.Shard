@@ -54,7 +54,9 @@ public class SystemResources : ISystem
                     {
                         world.Send(new MessageUnloadResource
                         {
-                            Resource = res.Resource!
+                            Resource = res.Resource!,
+                            Type = res.Type,
+                            Path = res.Path
                         });
                     }
                 }

@@ -13,11 +13,11 @@ using System.Collections;
 /// </summary>
 public readonly struct EntitySet : IEnumerable<Entity>
 {
-    private readonly List<SortedDictionary<int, IComponent>.KeyCollection> _entityCollections;
+    private readonly List<SortedSet<int>> _entityCollections;
     private readonly ComponentStore _store;
     private readonly ComponentRegistry _componentRegistry;
     
-    private EntitySet(List<SortedDictionary<int, IComponent>.KeyCollection> entityCollections, ComponentStore store,
+    private EntitySet(List<SortedSet<int>> entityCollections, ComponentStore store,
         ComponentRegistry componentRegistry)
     {
         _entityCollections = entityCollections;
@@ -31,11 +31,11 @@ public readonly struct EntitySet : IEnumerable<Entity>
     /// <param name="entities">The entity ids.</param>
     /// <param name="store">The component store where the entities reside.</param>
     /// <param name="componentRegistry">The component registry to use.</param>
-    internal EntitySet(SortedDictionary<int, IComponent>.KeyCollection? entities, ComponentStore store,
+    internal EntitySet(SortedSet<int>? entities, ComponentStore store,
         ComponentRegistry componentRegistry)
     {
         _entityCollections =
-            new List<SortedDictionary<int, IComponent>.KeyCollection>(entities != null ? 1 : 0);
+            new List<SortedSet<int>>(entities != null ? 1 : 0);
         if (entities != null) _entityCollections.Add(entities);
         _store = store;
         _componentRegistry = componentRegistry;
@@ -48,7 +48,7 @@ public readonly struct EntitySet : IEnumerable<Entity>
     public EntitySetEnumerator GetEnumerator()
     {
         var enumerators =
-            new List<SortedDictionary<int, IComponent>.KeyCollection.Enumerator>(_entityCollections.Count);
+            new List<SortedSet<int>.Enumerator>(_entityCollections.Count);
         if (_entityCollections.Count <= 0) return new EntitySetEnumerator(enumerators, _store, _componentRegistry);
         // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
         foreach (var v in _entityCollections)
@@ -77,7 +77,7 @@ public readonly struct EntitySet : IEnumerable<Entity>
         var newCollection = _store.GetEntitiesWith(componentId);
         if (newCollection == null) return this;
         var newEntityCollections =
-            new List<SortedDictionary<int, IComponent>.KeyCollection>(_entityCollections.Count + 1);
+            new List<SortedSet<int>>(_entityCollections.Count + 1);
         foreach (var v in _entityCollections)
         {
             newEntityCollections.Add(v);
@@ -99,7 +99,7 @@ public struct EntitySetEnumerator : IEnumerator<Entity>
 
     private readonly ComponentRegistry _componentRegistry;
     private readonly ComponentStore _store;
-    private readonly SortedDictionary<int, IComponent>.KeyCollection.Enumerator[] _entities;
+    private readonly SortedSet<int>.Enumerator[] _entities;
     private int _currValue = -1;
     private bool _done;
 
@@ -110,7 +110,7 @@ public struct EntitySetEnumerator : IEnumerator<Entity>
     /// <param name="list">The entity collections to intersect.</param>
     /// <param name="store">The component store.</param>
     /// <param name="componentRegistry">The component registry to use.</param>
-    internal EntitySetEnumerator(List<SortedDictionary<int, IComponent>.KeyCollection.Enumerator> list,
+    internal EntitySetEnumerator(List<SortedSet<int>.Enumerator> list,
         ComponentStore store, ComponentRegistry componentRegistry)
     {
         _entities = list.ToArray();

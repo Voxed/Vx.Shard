@@ -1,5 +1,6 @@
 using Vx.Shard.Graphics;
 using Vx.Shard.Resources;
+using Vx.Shard.Window;
 
 namespace Vx.Shard.Example;
 
@@ -19,6 +20,7 @@ public class TestSystem : ISystem
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
+        messageBusListenerBuilder.AddCallback<MessageInputWindowClose>(Close);
         componentStoreListenerBuilder.AddCallback<PositionComponent>(
             (_, entity, component) =>
             {
@@ -39,7 +41,11 @@ public class TestSystem : ISystem
                     }
                 });
             },
-            (_, entity, _) => { entity.RemoveComponent<ClientTestComponent>(); }
+            (_, entity, _) =>
+            {
+                entity.RemoveComponent<ClientTestComponent>();
+                entity.RemoveComponent<ResRef>();
+            }
         );
     }
 
@@ -75,5 +81,15 @@ public class TestSystem : ISystem
                                     i * 0.1) * (350.0 - i * 1.5)) + 180;
             }
         }
+    }
+
+    private void Close(World world, MessageInputWindowClose messageInputWindowClose)
+    {
+        foreach (var p in world.GetEntitiesWith<PositionComponent>())
+        {
+            p.RemoveComponent<PositionComponent>();
+        }
+        
+        world.GetSingletonComponent<ComponentMainLoop>()!.Running = false;
     }
 }

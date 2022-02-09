@@ -53,16 +53,6 @@ public class SystemSdl : ISystem
 
     private void Update(World world, MessageUpdate message)
     {
-        while (SDL.SDL_PollEvent(out var ev) == 1)
-        {
-            if (ev.type != SDL.SDL_EventType.SDL_WINDOWEVENT) continue;
-            if (ev.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
-            {
-                world.GetEntitiesWith<ComponentMainLoop>().ToList().ForEach(e =>
-                {
-                    e.GetComponent<ComponentMainLoop>()!.Running = false;
-                });
-            }
-        }
+
     }
 }

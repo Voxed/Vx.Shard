@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Core.Specs", "Vx.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Resources", "Vx.Shard.Resources\Vx.Shard.Resources.csproj", "{2A3F0836-53F6-4657-850F-EDB49003DE9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Input", "Vx.Shard.Input\Vx.Shard.Input.csproj", "{5F82458B-DE8B-483A-874B-0E1D3014376A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{2A3F0836-53F6-4657-850F-EDB49003DE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A3F0836-53F6-4657-850F-EDB49003DE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A3F0836-53F6-4657-850F-EDB49003DE9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

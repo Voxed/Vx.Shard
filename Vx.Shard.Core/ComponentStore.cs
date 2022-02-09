@@ -103,14 +103,20 @@ internal class ComponentStore
         return entityComponentStore.ContainsKey(entityId) ? entityComponentStore[entityId] : default;
     }
 
+    internal IComponent? GetSingletonComponent(int componentId)
+    {
+        if (!_components.ContainsKey(componentId)) return default;
+        return _components[componentId].Values.First();
+    }
+
     /// <summary>
     /// Get all entities with a specific component from storage.
     /// Because of the internal structure, this is very fast.
     /// </summary>
     /// <param name="componentId">The id of the component to query for.</param>
     /// <returns>The entities which have the specified component.</returns>
-    internal SortedDictionary<int, IComponent>.KeyCollection? GetEntitiesWith(int componentId)
+    internal SortedSet<int>? GetEntitiesWith(int componentId)
     {
-        return _components.ContainsKey(componentId) ? _components[componentId].Keys : default;
+        return _components.ContainsKey(componentId) ? new SortedSet<int>(_components[componentId].Keys) : default;
     }
 }

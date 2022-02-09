@@ -6,14 +6,17 @@ using Vx.Shard.Sdl;
 using Vx.Shard.Graphics;
 using Vx.Shard.Common;
 using Vx.Shard.Resources;
+using Vx.Shard.Window;
 
 Console.WriteLine(Directory.GetCurrentDirectory());
 
 var engine = new EngineBuilder()
+    .AddSystem(new SystemInput())
     .AddSystem(new SystemResources())
     .AddSystem(new SystemGraphics())
     .AddSystem(new SystemSdl())
     .AddSystem(new SystemSdlRenderer())
+    .AddSystem(new SystemSdlInput())
     .AddSystem(new TestSystem())
     .AddSystem(new SystemMainLoop())
     .Build();

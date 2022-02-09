@@ -58,4 +58,9 @@ public class World
             ComponentStore.GetEntitiesWith(_componentRegistry.GetComponentId<T>()), ComponentStore,
             _componentRegistry);
     }
+
+    public T? GetSingletonComponent<T>() where T : IComponent
+    {
+        return (T?)ComponentStore.GetSingletonComponent(_componentRegistry.GetComponentId<T>());
+    }
 }

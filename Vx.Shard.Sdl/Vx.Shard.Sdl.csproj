@@ -5,6 +5,7 @@
     <ProjectReference Include="..\SDL2\SDL2.csproj" />
     <ProjectReference Include="..\Vx.Shard.Graphics\Vx.Shard.Graphics.csproj" />
     <ProjectReference Include="..\Vx.Shard.Common\Vx.Shard.Common.csproj" />
+    <ProjectReference Include="..\Vx.Shard.Input\Vx.Shard.Input.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

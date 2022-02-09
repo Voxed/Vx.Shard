@@ -66,6 +66,7 @@ public class SystemSdlRenderer : ISystem
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
         messageBusListenerBuilder.AddCallback<MessageLoadResource>(LoadTexture);
+        messageBusListenerBuilder.AddCallback<MessageUnloadResource>(UnloadTexture);
     }
 
     public void Initialize(World world)
@@ -104,7 +105,6 @@ public class SystemSdlRenderer : ISystem
         {
             var img = SDL_image.IMG_Load(messageLoadResource.Initializer.Path);
 
-            Console.WriteLine(SDL_image.IMG_GetError());
             Console.WriteLine($"Loading texture: {messageLoadResource.Initializer.Path}");
 
             var texture = SDL.SDL_CreateTextureFromSurface(entity.GetComponent<ComponentSdl>()!.Renderer, img);
@@ -122,5 +122,15 @@ public class SystemSdlRenderer : ISystem
 
             messageLoadResource.Initializer.Resource = resourceTexture;
         }
+    }
+
+    private void UnloadTexture(World world, MessageUnloadResource messageUnloadResource)
+    {
+        if (messageUnloadResource.Type != typeof(ResourceTexture))
+            return;
+
+        SDL.SDL_DestroyTexture(((ResourceTextureSdl)messageUnloadResource.Resource).Texture);
+        
+        Console.WriteLine($"Unloading texture: {messageUnloadResource.Path}");
     }
 }
