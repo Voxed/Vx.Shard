@@ -20,14 +20,14 @@ public class SystemGraphics : ISystem
             {
                 world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
                 {
-                    e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(component.GetDrawable());
+                    e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(component.Drawable);
                 });
             },
             (world, entity, component) =>
             {
                 world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
                 {
-                    e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(component.GetDrawable());
+                    e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(component.Drawable);
                 });
             }
         );

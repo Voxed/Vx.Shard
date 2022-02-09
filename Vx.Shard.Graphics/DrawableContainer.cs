@@ -4,10 +4,10 @@ using Common;
 
 public class DrawableContainer : IDrawable
 {
-    public Vec2 Position = Vec2.Zero;
-
     private readonly List<IDrawable> _children = new();
     public IEnumerable<IDrawable> Children => _children.AsReadOnly();
+
+    public Vec2 Position { get; set; } = Vec2.Zero;
 
     public void Accept<T>(T context, IDrawableVisitor<T> visitor)
     {

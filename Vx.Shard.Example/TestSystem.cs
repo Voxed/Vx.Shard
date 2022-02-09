@@ -1,3 +1,6 @@
+using Vx.Shard.Graphics;
+using Vx.Shard.Resources;
+
 namespace Vx.Shard.Example;
 
 using Core;
@@ -7,6 +10,7 @@ public class TestSystem : ISystem
 {
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
+        componentRegistry.Register<ResRef>();
         componentRegistry.Register<ClientTestComponent>();
         componentRegistry.Register<PositionComponent>();
     }
@@ -16,7 +20,25 @@ public class TestSystem : ISystem
     {
         messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
         componentStoreListenerBuilder.AddCallback<PositionComponent>(
-            (_, entity, _) => { entity.AddComponent(new ClientTestComponent()); },
+            (_, entity, _) =>
+            {
+                entity.AddComponent(new ResRef
+                {   
+                    Test = new ResourceReference
+                    {
+                        Path = "test.png",
+                        Type = typeof(ResourceTexture)
+                    }
+                });
+                
+                entity.AddComponent(new ClientTestComponent
+                {
+                    Drawable = new DrawableSprite
+                    {
+                        Resource = entity.GetComponent<ResRef>()!.Test.GetResource<ResourceTexture>()
+                    }
+                });
+            },
             (_, entity, _) => { entity.RemoveComponent<ClientTestComponent>(); }
         );
     }

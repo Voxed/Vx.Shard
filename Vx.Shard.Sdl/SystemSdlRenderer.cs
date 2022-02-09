@@ -63,21 +63,24 @@ public class SystemSdlRenderer : ISystem
 
         public void VisitSprite(DrawableVisitorSdlContext context, DrawableSprite sprite)
         {
+            // Huge TODO
             SDL.SDL_Rect sRect;
             SDL.SDL_Rect tRect;
 
-            var spr = context.Sys!.LoadTexture(sprite.TexturePath!, out var w, out var h, context.Renderer);
+            //var spr = context.Sys!.LoadTexture(sprite.Resource!, out var w, out var h, context.Renderer);
 
             sRect.x = 0;
             sRect.y = 0;
-            sRect.w = w;
-            sRect.h = h;
+            sRect.w = 64;
+            sRect.h = 64;
 
             tRect.x = (int) (context.Position.X + sprite.Position.X);
             tRect.y = (int) (context.Position.Y + sprite.Position.Y);
             tRect.w = sRect.w;
             tRect.h = sRect.h;
 
+            IntPtr spr = ((ResourceTextureSdl) sprite.Resource).Texture;
+            
             SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, 0, IntPtr.Zero,
                 SDL.SDL_RendererFlip.SDL_FLIP_NONE);
         }

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vx.Shard.Core\Vx.Shard.Core.csproj" />
     <ProjectReference Include="..\Vx.Shard.Common\Vx.Shard.Common.csproj" />
+    <ProjectReference Include="..\Vx.Shard.Resources\Vx.Shard.Resources.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

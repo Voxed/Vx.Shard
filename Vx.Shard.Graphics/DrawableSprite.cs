@@ -4,8 +4,9 @@ using Common;
 
 public class DrawableSprite : IDrawable
 {
-    public readonly Vec2 Position = Vec2.Zero;
-    public string? TexturePath;
+    public ResourceTexture Resource;
+
+    public Vec2 Position { get; set; } = Vec2.Zero;
 
     public void Accept<T>(T context, IDrawableVisitor<T> visitor)
     {

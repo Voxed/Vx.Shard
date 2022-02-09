@@ -94,6 +94,9 @@ public readonly struct EntitySet : IEnumerable<Entity>
 /// </summary>
 public struct EntitySetEnumerator : IEnumerator<Entity>
 {
+    // This class intersects a collection of sorted component ID key collections quickly :)
+    // The algorithm is not based on anything well-tested as far as I know, so a proof might be a good idea.
+
     private readonly ComponentRegistry _componentRegistry;
     private readonly ComponentStore _store;
     private readonly SortedDictionary<int, IComponent>.KeyCollection.Enumerator[] _entities;
