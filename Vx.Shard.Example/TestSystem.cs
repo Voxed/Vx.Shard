@@ -28,7 +28,7 @@ public class TestSystem : ISystem
                 {   
                     Test = new ResourceReference
                     {
-                        Path = component.Index % 2 == 0 ? "test.png" : "test2.png",
+                        Path = "ship.png",
                         Type = typeof(ResourceTexture)
                     }
                 });
@@ -37,7 +37,9 @@ public class TestSystem : ISystem
                 {
                     Drawable = new DrawableSprite
                     {
-                        Resource = entity.GetComponent<ResRef>()!.Test.GetResource<ResourceTexture>()
+                        Resource = entity.GetComponent<ResRef>()!.Test.GetResource<ResourceTexture>(),
+                        Scaling = new Vec2(0.5f,0.5f),
+                        Pivot = new Vec2(131f/2, 256f/2)
                     }
                 });
             },
@@ -51,15 +53,14 @@ public class TestSystem : ISystem
 
     public void Initialize(World world)
     {
-        for (var i = 0; i < 200; i++)
+        for (var i = 0; i < 20; i++)
         {
             var entity = world.CreateEntity();
-            if (i < 5) continue;
             entity.AddComponent(new PositionComponent
             {
                 X = 12,
                 Y = 34,
-                Index = i
+                Index = i*10
             });
             entity.GetComponent<PositionComponent>()!.X = 43;
         }
@@ -67,18 +68,22 @@ public class TestSystem : ISystem
 
     private void Update(World world, MessageUpdate message)
     {
-        var i = 0;
         foreach (var e in world.GetEntitiesWith<ClientTestComponent>().With<PositionComponent>())
         {
-            i++;
+            var pc = e.GetComponent<PositionComponent>()!;
             foreach (var e2 in world.GetEntitiesWith<ComponentMainLoop>())
             {
+                var speed = 4.0f;
+                var ts = (DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds;
                 e.GetComponent<ClientTestComponent>()!.Drawable.Position.X =
-                    (int) (Math.Cos((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
-                                    i * 0.1) * (350.0 - i * 1.5)) + 290;
+                    (int) (Math.Cos(ts +
+                                    pc.Index * 0.1) * (350.0 - pc.Index * 1.5)) + 290;
                 e.GetComponent<ClientTestComponent>()!.Drawable.Position.Y =
-                    (int) (Math.Sin((DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds +
-                                    i * 0.1) * (350.0 - i * 1.5)) + 180;
+                    (int) (Math.Sin(ts +
+                                    pc.Index * 0.1) * (350.0 - pc.Index * 1.5)) + 180;
+                e.GetComponent<ClientTestComponent>()!.Drawable.Scaling.X = 0.5f * (float) ((1 + Math.Cos(ts*speed))/2);
+                e.GetComponent<ClientTestComponent>()!.Drawable.Scaling.Y = 0.5f + (float) (1 - (1 + Math.Cos(ts*speed))/2);
+                e.GetComponent<ClientTestComponent>()!.Drawable.Rotation = 3.14f*(float) Math.Cos(ts*speed*0.5);
             }
         }
     }

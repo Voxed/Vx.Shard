@@ -24,6 +24,8 @@ public class SystemSdl : ISystem
 
     public void Initialize(World world)
     {
+        SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, "1");
+        
         SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING);
         SDL_ttf.TTF_Init();
         _window = SDL.SDL_CreateWindow("Vx.Shard Game Engine",

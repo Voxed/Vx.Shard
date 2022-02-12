@@ -13,6 +13,8 @@ public class Vec2
     /// </summary>
     public static Vec2 Zero => new(0, 0);
 
+    public static Vec2 One => new(1, 1);
+
     /// <summary>
     /// The x component of the 2D vector.
     /// </summary>
@@ -43,5 +45,10 @@ public class Vec2
     public static Vec2 operator +(Vec2 first, Vec2 second)
     {
         return new Vec2(first.X + second.X, first.Y + second.Y);
+    }
+    
+    public static Vec2 operator *(Vec2 first, Vec2 second)
+    {
+        return new Vec2(first.X * second.X, first.Y * second.Y);
     }
 }
