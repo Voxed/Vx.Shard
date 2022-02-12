@@ -81,7 +81,7 @@ public class TestSystem : ISystem
                 e.GetComponent<ClientTestComponent>()!.Drawable.Position.Y =
                     (int) (Math.Sin(ts +
                                     pc.Index * 0.1) * (350.0 - pc.Index * 1.5)) + 180;
-                e.GetComponent<ClientTestComponent>()!.Drawable.Scaling.X = 0.5f * (float) ((1 + Math.Cos(ts*speed))/2);
+                //e.GetComponent<ClientTestComponent>()!.Drawable.Scaling.X = 0.5f * (float) ((1 + Math.Cos(ts*speed))/2);
                 e.GetComponent<ClientTestComponent>()!.Drawable.Scaling.Y = 0.5f + (float) (1 - (1 + Math.Cos(ts*speed))/2);
                 e.GetComponent<ClientTestComponent>()!.Drawable.Rotation = 3.14f*(float) Math.Cos(ts*speed*0.5);
             }

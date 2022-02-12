@@ -22,20 +22,28 @@ public class SystemSdlRenderer : ISystem
 
     private class DrawableVisitorSdl : IDrawableVisitor<DrawableVisitorSdlContext>
     {
+        private Matrix3x2 Transform(IDrawable drawable, Matrix3x2 old)
+        {
+            
+            
+            return 
+                   Matrix3x2.CreateScale(drawable.Scaling.X, drawable.Scaling.Y) *
+                   Matrix3x2.CreateRotation(drawable.Rotation, new Vector2(
+                       0,
+                       0)) *
+                   Matrix3x2.CreateTranslation(drawable.Position.X,
+                       drawable.Position.Y) *
+                   old;
+            
+        }
+        
         public void VisitContainer(DrawableVisitorSdlContext context, DrawableContainer container)
         {
             var newContext = new DrawableVisitorSdlContext
             {
                 Renderer = context.Renderer,
                 Sys = context.Sys,
-                Transform =
-                    context.Transform *
-                    Matrix3x2.CreateScale(container.Scaling.X, container.Scaling.Y) *
-                    Matrix3x2.CreateRotation(container.Rotation, new Vector2(
-                        container.Pivot.X * container.Scaling.X,
-                        container.Pivot.Y * container.Scaling.Y)) *
-                    Matrix3x2.CreateTranslation(container.Position.X - container.Pivot.X * container.Scaling.X,
-                        container.Position.Y - container.Pivot.Y * container.Scaling.Y)
+                Transform = Transform(container, context.Transform)
             };
             container.Children.ToList().ForEach(drawable => drawable.Accept(newContext, this));
         }
@@ -48,15 +56,9 @@ public class SystemSdlRenderer : ISystem
             {
                 Renderer = context.Renderer,
                 Sys = context.Sys,
-                Transform =
-                    context.Transform *
-                    Matrix3x2.CreateScale(sprite.Scaling.X, sprite.Scaling.Y) *
-                    Matrix3x2.CreateRotation(sprite.Rotation, new Vector2(
-                        sprite.Pivot.X * sprite.Scaling.X,
-                        sprite.Pivot.Y * sprite.Scaling.Y)) *
-                    Matrix3x2.CreateTranslation(sprite.Position.X - sprite.Pivot.X * sprite.Scaling.X,
-                        sprite.Position.Y - sprite.Pivot.Y * sprite.Scaling.Y)
+                Transform = Transform(sprite, context.Transform)
             };
+            
             
             
             
@@ -80,16 +82,19 @@ public class SystemSdlRenderer : ISystem
             
             
             var rot = Math.Atan2(tr.M12, tr.M11);
-            tRect.x = (int) (newContext.Transform.M31);
-            tRect.y = (int) (newContext.Transform.M32);
-            tRect.w = (int) (Math.Sqrt(tr.M11 * tr.M11 + tr.M12 * tr.M12) * sRect.w);
-            tRect.h = (int) (Math.Sqrt(tr.M21 * tr.M21 + tr.M22 * tr.M22) * sRect.h);
 
+            var shear = Math.Atan2(tr.M22, tr.M21) - Math.PI / 2 - rot;
+            
+            tRect.w = (int) (Math.Sqrt(tr.M11 * tr.M11 + tr.M12 * tr.M12) * sRect.w);
+            tRect.h = (int) (Math.Sqrt(tr.M21 * tr.M21 + tr.M22 * tr.M22) * sRect.h * Math.Cos(shear));
+            tRect.x = (int) (newContext.Transform.M31) - tRect.w/2;
+            tRect.y = (int) (newContext.Transform.M32) - tRect.h/2;
+            
             IntPtr spr = ((ResourceTextureSdl) sprite.Resource).Texture;
 
-            var p = new SDL.SDL_Point {x = 0, y = 0};
+            var p = new SDL.SDL_Point {x = sRect.w/2, y = sRect.h/2};
             
-            SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, rot/3.14*180, ref p, 
+            SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, rot/3.14*180, IntPtr.Zero, 
                 SDL.SDL_RendererFlip.SDL_FLIP_NONE);
         }
     }
