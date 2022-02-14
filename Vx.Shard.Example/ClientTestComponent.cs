@@ -6,5 +6,7 @@ using Graphics;
 public record ClientTestComponent : IComponent, IDrawableComponent
 {
     public IDrawable Drawable { get; init; }
+    public DrawableSprite Sh { get; init; }
     public List<IDrawable> Ch { get; init; }
+    
 }

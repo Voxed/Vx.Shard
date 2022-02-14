@@ -13,6 +13,8 @@ public class DrawableContainer : IDrawable
     public Vec2 Scaling { get; set; } = Vec2.One;
     public float Rotation { get; set; } = 0;
     public Vec2 Pivot { get; set; } = Vec2.Zero;
+    
+    public float Opacity { get; set; } = 0.0f;
 
     Action<IDrawable>? IDrawable.OrderChangeCallback { get; set; }
 
@@ -25,6 +27,8 @@ public class DrawableContainer : IDrawable
             ((IDrawable) this).OrderChangeCallback(this);
         }
     }
+
+    public Color Tint { get; set; } = Color.White;
 
     public void Accept<T>(T context, IDrawableVisitor<T> visitor)
     {
