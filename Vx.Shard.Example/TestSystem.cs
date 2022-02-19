@@ -33,12 +33,12 @@ public class TestSystem : ISystem
                     },
                     TestL = new ResourceReference
                     {
-                        Path = "ship-tl.png",
+                        Path = "ship.png",
                         Type = typeof(ResourceTexture)
                     },
                     TestR = new ResourceReference
                     {
-                        Path = "ship-tr.png",
+                        Path = "ship.png",
                         Type = typeof(ResourceTexture)
                     }
                 });
@@ -46,6 +46,7 @@ public class TestSystem : ISystem
                 var dr = new DrawableSprite
                 {
                     Scaling = new Vec2(0.4f, 0.4f),
+                    Pivot = new Vec2(0.5f, 0.5f),
                     Resource = entity.GetComponent<ResRef>()!.Test.GetResource<ResourceTexture>(),
                 };
                 
@@ -56,14 +57,15 @@ public class TestSystem : ISystem
                 };
 
                 List<IDrawable> guns = new();
-                for (int i = 0; i < 0; i++)
+                for (int i = 0; i < 20; i++)
                 {
                     var dr2 = new DrawableSprite
                     {
                         Resource = entity.GetComponent<ResRef>()!.Test.GetResource<ResourceTexture>(),
                         Position = new Vec2(64f, 0f),
                         Scaling = new Vec2(0.2f, 0.2f),
-                        BlendMode = BlendMode.Add
+                        BlendMode = BlendMode.Add,
+                        Pivot = new Vec2(0.5f, 0.5f)
                     };
                     cont.AddChild(dr2);
                     guns.Add(dr2);
@@ -112,32 +114,32 @@ public class TestSystem : ISystem
                 var ts = (DateTime.Now - e2.GetComponent<ComponentMainLoop>()!.StartTime).TotalSeconds*2;
                 dr.Drawable.Position = new Vec2(pc.X, pc.Y - ((float) Math.Cos(ts*60 + Math.PI) + 1)*1.5f);
                 pc.X = 640f / 2f - (float)Math.Cos(ts*1)*260f;
-                dr.Drawable.Rotation = (float) -Math.Cos(ts)/8;
-                dr.Drawable.Scaling.Y = (1 - ((float) Math.Cos(ts*30 + Math.PI) + 1)/70)*0.85f;
-                //dr.Drawable.Scaling.X = (1 - ((float) Math.Cos(ts*30 + Math.PI) + 1)/70)*0.85f;
-                //dr.Drawable.Tint.G = (float)(Math.Cos(ts*2) + 1) / 2f;
-                //dr.Drawable.Tint.B = (float)(Math.Cos(ts*2) + 1) / 2f;
+                dr.Drawable.Rotation = (float) -Math.Cos(ts*2);
+                dr.Drawable.Scaling.Y = (1 - ((float) Math.Cos(ts*2 + Math.PI) + 1)/3.0f)*2.0f;
+                dr.Drawable.Scaling.X = (1 - ((float) Math.Cos(ts*2 + Math.PI) + 1)/3.0f)*2.0f;
+                dr.Drawable.Tint.G = (float)(Math.Cos(ts*2) + 1) / 2f;
+                dr.Drawable.Tint.B = (float)(Math.Cos(ts*2) + 1) / 2f;
                 if ((float) Math.Cos(ts * 1) > 0.3)
                 {
-                    dr.Sh.Resource = e.GetComponent<ResRef>().TestL.GetResource<ResourceTexture>();
+                    dr.Sh.Resource = e.GetComponent<ResRef>()!.TestL.GetResource<ResourceTexture>();
                 }
                 else if((float) Math.Cos(ts * 1) < -0.3)
                 {
-                    dr.Sh.Resource = e.GetComponent<ResRef>().TestR.GetResource<ResourceTexture>();
+                    dr.Sh.Resource = e.GetComponent<ResRef>()!.TestR.GetResource<ResourceTexture>();
                 }
                 else
                 {
-                    dr.Sh.Resource = e.GetComponent<ResRef>().Test.GetResource<ResourceTexture>();
+                    dr.Sh.Resource = e.GetComponent<ResRef>()!.Test.GetResource<ResourceTexture>();
                 }
                 int i = 0;
-                /*foreach (var ch in dr.Ch)
+                foreach (var ch in dr.Ch)
                 {
                     i++;
-                    ch.Position.X = (float) Math.Cos(i*0.7 + ts * 2) * 20f + (float) Math.Cos(i*0.7 + ts * 2) * i*2;
-                    ch.Position.Y = i * 7 - 60;
+                    ch.Position.X = (float) Math.Cos(i*0.7 + ts * 2) * 40f + (float) Math.Cos(i*0.7 + ts * 2) * i*6;
+                    ch.Position.Y = i * 4 - 60;
                     ch.ZOrder = (float) Math.Sin(i*0.7 + ts * 2) * 128f;
-                    ch.Opacity = (float)(Math.Cos(ts*2) + 1) / 4f;
-                }*/
+                    ch.Opacity = (float)(Math.Cos(ts*2) + 1) / 6f;
+                }
             }
         }
     }

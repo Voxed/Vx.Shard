@@ -88,8 +88,8 @@ public class SystemSdlRenderer : ISystem
 
             tRect.w = (int) (Math.Sqrt(tr.M11 * tr.M11 + tr.M12 * tr.M12) * sRect.w);
             tRect.h = (int) (Math.Sqrt(tr.M21 * tr.M21 + tr.M22 * tr.M22) * sRect.h * Math.Cos(shear));
-            tRect.x = (int) (newContext.Transform.M31) - tRect.w / 2;
-            tRect.y = (int) (newContext.Transform.M32) - tRect.h / 2;
+            tRect.x = (int) (newContext.Transform.M31);
+            tRect.y = (int) (newContext.Transform.M32);
 
             IntPtr spr = ((ResourceTextureSdl) sprite.Resource).Texture;
 
@@ -111,13 +111,22 @@ public class SystemSdlRenderer : ISystem
                     break;
             }
 
+            var center = new SDL.SDL_Point();
+            center.x = (int)(tRect.w*sprite.Pivot.X);
+            center.y = (int)(tRect.h*sprite.Pivot.Y);
+
+            tRect.x -= center.x;
+            tRect.y -= center.y;
+            
             SDL.SDL_SetTextureColorMod(spr, (byte) (newContext.Tint.R * 255), (byte) (newContext.Tint.G * 255),
                 (byte) (newContext.Tint.B * 255));
             SDL.SDL_SetTextureAlphaMod(spr, (byte) (255 - 255 * newContext.Opacity));
-            SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, rot / 3.14 * 180, IntPtr.Zero,
+            SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, rot / 3.14 * 180,
+                ref center,
                 SDL.SDL_RendererFlip.SDL_FLIP_NONE);
         }
     }
+
 
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
@@ -165,9 +174,15 @@ public class SystemSdlRenderer : ISystem
 
         foreach (var entity in world.GetEntitiesWith<ComponentSdl>())
         {
+            Console.WriteLine($"Loading texture: {messageLoadResource.Initializer.Path}");
+
             var img = SDL_image.IMG_Load(messageLoadResource.Initializer.Path);
 
-            Console.WriteLine($"Loading texture: {messageLoadResource.Initializer.Path}");
+            if (img == IntPtr.Zero)
+            {
+                Console.WriteLine($"Error when loading image: {SDL.SDL_GetError()}");
+                return;
+            }
 
             var texture = SDL.SDL_CreateTextureFromSurface(entity.GetComponent<ComponentSdl>()!.Renderer, img);
 

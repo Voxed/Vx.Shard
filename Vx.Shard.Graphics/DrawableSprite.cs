@@ -12,7 +12,7 @@ public class DrawableSprite : IDrawable
 
     public float Rotation { get; set; } = 0;
     public Vec2 Pivot { get; set; } = Vec2.Zero;
-
+    
     public BlendMode BlendMode { get; set; } = BlendMode.Normal;
     public float Opacity { get; set; } = 0.0f;
 

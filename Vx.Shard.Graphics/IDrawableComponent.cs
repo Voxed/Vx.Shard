@@ -2,5 +2,5 @@ namespace Vx.Shard.Graphics;
 
 public interface IDrawableComponent
 {
-    public IDrawable Drawable { get; init; }
+    public IDrawable Drawable { get; }
 }

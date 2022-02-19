@@ -17,7 +17,7 @@ var engine = new EngineBuilder()
     .AddSystem(new SystemSdl())
     .AddSystem(new SystemSdlRenderer())
     .AddSystem(new SystemSdlInput())
-    .AddSystem(new TestSystem())
+    .AddSystem(new SystemPlayer())
     .AddSystem(new SystemMainLoop())
     .Build();
 

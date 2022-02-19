@@ -11,7 +11,7 @@ using Core;
 public record MessageUpdate : IMessage
 {
     /// <summary>
-    /// Time passed since the previous MessageUpdate was initially transmitted.
+    /// Time passsed since the previous MessageUpdate was initially transmitted.
     /// </summary>
     public TimeSpan Delta { get; init; }
 }

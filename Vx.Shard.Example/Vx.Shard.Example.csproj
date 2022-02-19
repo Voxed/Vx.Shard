@@ -6,6 +6,10 @@
     <ProjectReference Include="..\Vx.Shard.Graphics\Vx.Shard.Graphics.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="obj\PlayerSystem.cs" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
