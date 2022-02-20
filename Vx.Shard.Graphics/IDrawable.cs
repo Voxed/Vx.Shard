@@ -11,13 +11,13 @@ public interface IDrawable
     public float Rotation { get; set; }
     public Vec2 Pivot { get; set; }
 
-    internal Action<IDrawable> OrderChangeCallback { get; set; }
-
-    public float ZOrder { get; set; }
+    public int ZOrder { get; set; }
     
     public Color Tint { get; set; }
     
     public float Opacity { get; set; }
+
+    internal Action? OrderChangedListener { get; set; }
 
     void Accept<T>(T context, IDrawableVisitor<T> visitor);
 }

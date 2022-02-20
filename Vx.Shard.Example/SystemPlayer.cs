@@ -12,10 +12,6 @@ public class SystemPlayer : ISystem
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        componentStoreListenerBuilder.AddCallback<ComponentPlayerRenderer>(
-        {
-            
-        });
     }
 
     public void Initialize(World world)

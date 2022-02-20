@@ -11,6 +11,8 @@ using Graphics;
 // TODO: Remake this entire class
 public class SystemSdlRenderer : ISystem
 {
+    private IntPtr _window, _renderer;
+
     private record DrawableVisitorSdlContext
     {
         public IntPtr Renderer;
@@ -53,7 +55,7 @@ public class SystemSdlRenderer : ISystem
 
         public void VisitSprite(DrawableVisitorSdlContext context, DrawableSprite sprite)
         {
-            var texture = ((ResourceTextureSdl) sprite.Resource);
+            var texture = ((ResourceTextureSdl) sprite.Resource.Resource);
 
             var newContext = new DrawableVisitorSdlContext
             {
@@ -76,9 +78,6 @@ public class SystemSdlRenderer : ISystem
             sRect.w = texture.Width;
             sRect.h = texture.Height;
 
-            var scaled = new Vec2(sRect.w, sRect.h) * sprite.Scaling;
-            var pivot = scaled * sprite.Pivot;
-
             var tr = newContext.Transform;
 
 
@@ -86,12 +85,16 @@ public class SystemSdlRenderer : ISystem
 
             var shear = Math.Atan2(tr.M22, tr.M21) - Math.PI / 2 - rot;
 
-            tRect.w = (int) (Math.Sqrt(tr.M11 * tr.M11 + tr.M12 * tr.M12) * sRect.w);
-            tRect.h = (int) (Math.Sqrt(tr.M21 * tr.M21 + tr.M22 * tr.M22) * sRect.h * Math.Cos(shear));
+
+            var scaleX = Math.Sqrt(tr.M11 * tr.M11 + tr.M12 * tr.M12);
+            var scaleY = Math.Sqrt(tr.M21 * tr.M21 + tr.M22 * tr.M22);
+
+            tRect.w = (int) (scaleX * sRect.w);
+            tRect.h = (int) (scaleY * sRect.h * Math.Cos(shear));
             tRect.x = (int) (newContext.Transform.M31);
             tRect.y = (int) (newContext.Transform.M32);
 
-            IntPtr spr = ((ResourceTextureSdl) sprite.Resource).Texture;
+            IntPtr spr = ((ResourceTextureSdl) sprite.Resource.Resource).Texture;
 
             var p = new SDL.SDL_Point {x = sRect.w / 2, y = sRect.h / 2};
 
@@ -112,12 +115,12 @@ public class SystemSdlRenderer : ISystem
             }
 
             var center = new SDL.SDL_Point();
-            center.x = (int)(tRect.w*sprite.Pivot.X);
-            center.y = (int)(tRect.h*sprite.Pivot.Y);
+            center.x = (int) (tRect.w * sprite.Pivot.X);
+            center.y = (int) (tRect.h * sprite.Pivot.Y);
 
             tRect.x -= center.x;
             tRect.y -= center.y;
-            
+
             SDL.SDL_SetTextureColorMod(spr, (byte) (newContext.Tint.R * 255), (byte) (newContext.Tint.G * 255),
                 (byte) (newContext.Tint.B * 255));
             SDL.SDL_SetTextureAlphaMod(spr, (byte) (255 - 255 * newContext.Opacity));
@@ -142,6 +145,30 @@ public class SystemSdlRenderer : ISystem
 
     public void Initialize(World world)
     {
+        _window = SDL.SDL_CreateWindow("Vx.Shard Game Engine",
+            SDL.SDL_WINDOWPOS_CENTERED,
+            SDL.SDL_WINDOWPOS_CENTERED,
+            1000, 700,
+            0);
+
+        Console.WriteLine(SDL.SDL_GetError());
+
+        _renderer = SDL.SDL_CreateRenderer(_window,
+            -1,
+            SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED | SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC);
+
+        Console.WriteLine(SDL.SDL_GetError());
+
+        SDL.SDL_SetRenderDrawBlendMode(_renderer, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
+
+        SDL.SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+
+        world.CreateEntity().AddComponent(new ComponentSdl
+        {
+            Renderer = _renderer
+        });
+
+        world.GetSingletonComponent<ComponentGraphicsScene>()!.Size = new Vec2(1000, 700);
     }
 
     private void Update(World world, MessageUpdate message)
@@ -169,7 +196,7 @@ public class SystemSdlRenderer : ISystem
 
     private void LoadTexture(World world, MessageLoadResource messageLoadResource)
     {
-        if (messageLoadResource.Initializer.Type != typeof(ResourceTexture))
+        if (messageLoadResource.Initializer.Type != "texture")
             return;
 
         foreach (var entity in world.GetEntitiesWith<ComponentSdl>())
@@ -203,11 +230,11 @@ public class SystemSdlRenderer : ISystem
 
     private void UnloadTexture(World world, MessageUnloadResource messageUnloadResource)
     {
-        if (messageUnloadResource.Type != typeof(ResourceTexture))
+        if (messageUnloadResource.Reference.Type != "texture")
             return;
 
-        SDL.SDL_DestroyTexture(((ResourceTextureSdl) messageUnloadResource.Resource).Texture);
+        SDL.SDL_DestroyTexture(((ResourceTextureSdl) messageUnloadResource.Reference.Resource).Texture);
 
-        Console.WriteLine($"Unloading texture: {messageUnloadResource.Path}");
+        Console.WriteLine($"Unloading texture: {messageUnloadResource.Reference.Path}");
     }
 }

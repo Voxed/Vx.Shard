@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Core", "Vx.Shard.Core\Vx.Shard.Core.csproj", "{EEC81CFF-1B79-4D13-942F-3512B5B8B178}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Example", "Vx.Shard.Example\Vx.Shard.Example.csproj", "{AA0A97D2-183E-45A3-AE75-7A5F2BBE604B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2", "SDL2\SDL2.csproj", "{FCBD4647-CED7-433D-B604-3D68E7F93FBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Sdl", "Vx.Shard.Sdl\Vx.Shard.Sdl.csproj", "{882456F5-C7DA-416B-83A0-EC1A04441A37}"
@@ -21,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Resources", "Vx.Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Input", "Vx.Shard.Input\Vx.Shard.Input.csproj", "{5F82458B-DE8B-483A-874B-0E1D3014376A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.SpaceDemo", "Vx.Shard.SpaceDemo\Vx.Shard.SpaceDemo.csproj", "{571AEDEA-FC28-4765-8DEA-21DD2994ACFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,10 +34,6 @@ Global
 		{EEC81CFF-1B79-4D13-942F-3512B5B8B178}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEC81CFF-1B79-4D13-942F-3512B5B8B178}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEC81CFF-1B79-4D13-942F-3512B5B8B178}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA0A97D2-183E-45A3-AE75-7A5F2BBE604B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA0A97D2-183E-45A3-AE75-7A5F2BBE604B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA0A97D2-183E-45A3-AE75-7A5F2BBE604B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA0A97D2-183E-45A3-AE75-7A5F2BBE604B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FCBD4647-CED7-433D-B604-3D68E7F93FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FCBD4647-CED7-433D-B604-3D68E7F93FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCBD4647-CED7-433D-B604-3D68E7F93FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,5 +62,9 @@ Global
 		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F82458B-DE8B-483A-874B-0E1D3014376A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{571AEDEA-FC28-4765-8DEA-21DD2994ACFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{571AEDEA-FC28-4765-8DEA-21DD2994ACFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{571AEDEA-FC28-4765-8DEA-21DD2994ACFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{571AEDEA-FC28-4765-8DEA-21DD2994ACFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

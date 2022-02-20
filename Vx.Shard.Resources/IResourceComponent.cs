@@ -2,5 +2,5 @@ namespace Vx.Shard.Resources;
 
 public interface IResourceComponent
 {
-    ResourceReference[] GetResources();
+    ResourceReference[] Resources { get; }
 }

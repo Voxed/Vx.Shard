@@ -36,6 +36,11 @@ public class Vec2
         Y = y;
     }
 
+    public float Distance()
+    {
+        return (float) Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
+    }
+    
     /// <summary>
     /// Add two vectors together.
     /// </summary>
@@ -45,6 +50,16 @@ public class Vec2
     public static Vec2 operator +(Vec2 first, Vec2 second)
     {
         return new Vec2(first.X + second.X, first.Y + second.Y);
+    }
+    
+    public static Vec2 operator -(Vec2 first, Vec2 second)
+    {
+        return new Vec2(first.X - second.X, first.Y - second.Y);
+    }
+    
+    public static Vec2 operator /(Vec2 first, float second)
+    {
+        return new Vec2(first.X / second, first.Y / second);
     }
     
     public static Vec2 operator *(Vec2 first, Vec2 second)
