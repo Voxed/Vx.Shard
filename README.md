@@ -35,10 +35,14 @@ Implemented is a strong word, these probably need some rework, especially the SD
     * A system which invokes a stoppable main loop on initialization. Hook this up last in your EngineBuilder.
 * **SystemGraphics**        
     * A system which collects drawable components from around the world and inserts them into one main scene component.
+* **SystemResources**
+    * A resource manager system which keeps track of resources required for each entity.
 * **SystemSdl**             
     * A system which initializes an SDL window and renderer.
 * **SystemSdlRenderer**     
     * A system which takes in the main drawable scene outputted from the SystemGraphics and draws it on the SDL window.
+* **SystemCollision**
+    * 2D elastic ball collision.
 
 ## Todo
 * Comments
