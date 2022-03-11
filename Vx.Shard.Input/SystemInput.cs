@@ -6,7 +6,9 @@ public class SystemInput : ISystem
 {
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
-        messageRegistry.Register<MessageInputWindowClose>();
+        messageRegistry
+            .Register<MessageWindowClose>()
+            .Register<MessageMouseMove>();
         componentRegistry.Register<ComponentMouse>();
     }
 

@@ -114,23 +114,6 @@ public class ComponentStoreListenerBuilder
         return this;
     }
 
-    public ComponentStoreListenerBuilder AddSubtypeCallback<T>(Callback<T>? creationCallback = null,
-        Callback<T>? destructionCallback = null)
-    {
-        _componentRegistry.GetSubtypeComponentIds<T>().ToList().ForEach(id =>
-        {
-            AddCallback(id,
-                creationCallback != null
-                    ? (world, entity, component) => { creationCallback(world, entity, (T) component); }
-                    : null,
-                destructionCallback != null
-                    ? (world, entity, component) => { destructionCallback(world, entity, (T) component); }
-                    : null);
-            Console.WriteLine("    * Configured callback for component {0} as {1}", id, typeof(T).Name);
-        });
-        return this;
-    }
-
     /// <summary>
     /// Build an IComponentStoreListener which invokes the configured callbacks.
     /// </summary>

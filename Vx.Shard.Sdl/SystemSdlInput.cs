@@ -27,17 +27,22 @@ public class SystemSdlInput : ISystem
     {
         while (SDL.SDL_PollEvent(out var ev) == 1)
         {
-            if (ev.type == SDL.SDL_EventType.SDL_WINDOWEVENT)
+            switch (ev.type)
             {
-                if (ev.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
-                {
-                    world.Send(new MessageInputWindowClose());
-                }
+                case SDL.SDL_EventType.SDL_WINDOWEVENT:
+                    switch (ev.window.windowEvent)
+                    {
+                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
+                            world.Send(new MessageWindowClose());
+                            break;
+                    }
+                    break;
+                case SDL.SDL_EventType.SDL_MOUSEMOTION:
+                    var pos = new Vec2(ev.motion.x, ev.motion.y);
+                    world.Send(new MessageMouseMove(pos));
+                    world.GetSingletonComponent<ComponentMouse>()!.Position = pos;
+                    break;
             }
         }
-
-        var componentMouse = world.GetSingletonComponent<ComponentMouse>()!;
-        SDL.SDL_GetMouseState(out var x, out var y);
-        componentMouse.Position = new Vec2(x, y);
     }
 }

@@ -15,9 +15,16 @@ public class DrawableSprite : IDrawable
     public Vec2 Pivot { get; set; } = Vec2.Zero;
 
     public BlendMode BlendMode { get; set; } = BlendMode.Normal;
+    public ScaleQuality ScaleQuality { get; set; } = ScaleQuality.Best;
     public float Opacity { get; set; } = 0.0f;
 
     private int _zOrder = 0;
+
+    public DrawableSprite(ResourceReference resource)
+    {
+        Resource = resource;
+    }
+    
     public int ZOrder
     {
         get => _zOrder;

@@ -66,4 +66,9 @@ public class Vec2
     {
         return new Vec2(first.X * second.X, first.Y * second.Y);
     }
+
+    public override String ToString()
+    {
+        return $"<Vec2 x=\"{X}\" y=\"{Y}\">";
+    }
 }

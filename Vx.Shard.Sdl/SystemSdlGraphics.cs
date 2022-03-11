@@ -9,7 +9,7 @@ using Common;
 using Graphics;
 
 // TODO: Remake this entire class
-public class SystemSdlRenderer : ISystem
+public class SystemSdlGraphics : ISystem
 {
     private IntPtr _window, _renderer;
 
@@ -19,7 +19,7 @@ public class SystemSdlRenderer : ISystem
 
         public Matrix3x2 Transform = Matrix3x2.Identity;
 
-        public SystemSdlRenderer? Sys { get; init; }
+        public SystemSdlGraphics? Sys { get; init; }
 
         public Color Tint = Color.White;
 
@@ -114,6 +114,19 @@ public class SystemSdlRenderer : ISystem
                     break;
             }
 
+            switch (sprite.ScaleQuality)
+            {
+                case ScaleQuality.Best:
+                    SDL.SDL_SetTextureScaleMode(spr, SDL.SDL_ScaleMode.SDL_ScaleModeBest);
+                    break;
+                case ScaleQuality.Linear:
+                    SDL.SDL_SetTextureScaleMode(spr, SDL.SDL_ScaleMode.SDL_ScaleModeLinear);
+                    break;
+                case ScaleQuality.Nearest:
+                    SDL.SDL_SetTextureScaleMode(spr, SDL.SDL_ScaleMode.SDL_ScaleModeNearest);
+                    break;
+            }
+            
             var center = new SDL.SDL_Point();
             center.x = (int) (tRect.w * sprite.Pivot.X);
             center.y = (int) (tRect.h * sprite.Pivot.Y);

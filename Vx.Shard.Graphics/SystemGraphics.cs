@@ -12,24 +12,25 @@ public class SystemGraphics : ISystem
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
         componentRegistry.Register<ComponentGraphicsScene>();
+        componentRegistry.Register<ComponentRenderer>();
     }
 
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        componentStoreListenerBuilder.AddSubtypeCallback<IDrawableComponent>(
+        componentStoreListenerBuilder.AddCallback<ComponentRenderer>(
             (world, entity, component) =>
             {
                 world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
                 {
-                    e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(component.Drawable);
+                    e.GetComponent<ComponentGraphicsScene>()!.Root.AddChild(component.DrawableContainer);
                 });
             },
             (world, entity, component) =>
             {
                 world.GetEntitiesWith<ComponentGraphicsScene>().ToList().ForEach(e =>
                 {
-                    e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(component.Drawable);
+                    e.GetComponent<ComponentGraphicsScene>()!.Root.RemoveChild(component.DrawableContainer);
                 });
             }
         );
