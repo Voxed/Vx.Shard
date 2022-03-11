@@ -30,7 +30,7 @@ public class SystemCollision : ISystem
     {
         var colliders = world
             .GetEntitiesWith<ComponentCollision>()
-            .With<Component2DVelocity>()
+            .With<ComponentVelocity>()
             .With<ComponentPosition>().ToList();
 
         // Boilerplate elastic collision algorithm.
@@ -49,8 +49,8 @@ public class SystemCollision : ISystem
 
                 if ((p1.Position - p2.Position).Distance() < c1.Radius + c2.Radius)
                 {
-                    var cv1 = e1.GetComponent<Component2DVelocity>()!;
-                    var cv2 = e2.GetComponent<Component2DVelocity>()!;
+                    var cv1 = e1.GetComponent<ComponentVelocity>()!;
+                    var cv2 = e2.GetComponent<ComponentVelocity>()!;
                 
                     var m1 = Math.Pow(c1.Radius, 2) * Math.PI;
                     var m2 = Math.Pow(c2.Radius, 2) * Math.PI;

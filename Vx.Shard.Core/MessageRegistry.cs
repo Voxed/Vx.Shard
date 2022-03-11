@@ -2,9 +2,9 @@ namespace Vx.Shard.Core;
 
 public class MessageRegistry
 {
-    private readonly Dictionary<Type, int> _messages = new ();
+    private readonly Dictionary<Type, int> _messages = new();
     private int _nextMessageId;
-    
+
     /// <summary>
     /// Register a message type to a message id.
     /// </summary>
@@ -12,12 +12,19 @@ public class MessageRegistry
     public MessageRegistry Register<T>() where T : IMessage
     {
         if (!_messages.ContainsKey(typeof(T)))
+        {
             _messages.Add(typeof(T), ++_nextMessageId); // No zero id, that will indicate a null component.
-        
-        Console.WriteLine("    * Registered message {0} to id {1}", typeof(T).Name, _nextMessageId);
+
+            Console.WriteLine("    * Registered message {0} to id {1}", typeof(T).Name, _nextMessageId);
+        }
+        else
+        {
+            Console.WriteLine("    ! Message {0} has already been registered", typeof(T).Name);
+        }
+
         return this;
     }
-    
+
     /// <summary>
     /// Get the message id from a message type.
     /// </summary>

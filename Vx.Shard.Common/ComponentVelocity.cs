@@ -3,7 +3,7 @@ using Vx.Shard.Core;
 
 namespace Vx.Shard.Common;
 
-public class Component2DVelocity : IComponent
+public class ComponentVelocity : IComponent
 {
     public Vec2 Velocity = Vec2.Zero;
 }

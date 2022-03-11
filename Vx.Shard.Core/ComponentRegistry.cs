@@ -12,9 +12,15 @@ public class ComponentRegistry
     public ComponentRegistry Register<T>() where T : IComponent
     {
         if (!_components.ContainsKey(typeof(T)))
+        {
             _components.Add(typeof(T), ++_nextComponentId); // No zero id, that will indicate a null component.
-        
-        Console.WriteLine("    * Registered component {0} to id {1}", typeof(T).Name, _nextComponentId);
+            Console.WriteLine("    * Registered component {0} to id {1}", typeof(T).Name, _nextComponentId);
+        }
+        else
+        {
+            Console.WriteLine("    ! Component {0} has already been registered", typeof(T).Name);
+        }
+
         return this;
     }
 
