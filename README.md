@@ -43,8 +43,8 @@ Implemented is a strong word, these probably need some rework, especially the SD
 ## Todo
 * Comments
 * Improve existing systems
-* More nice to have engine features
 * Sound system
-* Collision system
-* Resource manager (no clear idea yet)
 * Alot more...
+
+## Bugs
+* I've observed entities using the wrong textures sometimes, very weird must investigate further.
