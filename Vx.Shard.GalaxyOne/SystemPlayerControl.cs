@@ -24,9 +24,9 @@ public class SystemPlayerControl : ISystem
 
     private void Update(World world, MessageUpdate msg)
     {
-        foreach (var entity in world.GetEntitiesWith<ComponentPlayerController>().With<ComponentVelocity>())
+        foreach (var entity in world.GetEntitiesWith<ComponentPlayerController>().With<Component2DVelocity>())
         {
-            entity.GetComponent<ComponentVelocity>()!.Velocity =
+            entity.GetComponent<Component2DVelocity>()!.Velocity =
                 (world.GetSingletonComponent<ComponentMouse>()!.Position -
                  entity.GetComponent<ComponentPosition>()!.Position) / 8.0f;
         }

@@ -47,7 +47,7 @@ public class SystemShip : ISystem
                 (int) ((DateTime.Now - entity.GetComponent<ComponentShipRenderer>()!.CreationTime).TotalSeconds * 10)
                 % entity.GetComponent<ComponentShipRenderer>()!.BoostAnimationLength;
             entity.GetComponent<ComponentRenderer>()!.DrawableContainer.Rotation =
-                entity.GetComponent<ComponentVelocity>()!.Velocity.X/60.0f;
+                entity.GetComponent<Component2DVelocity>()!.Velocity.X/60.0f;
         }
     }
 }

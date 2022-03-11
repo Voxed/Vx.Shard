@@ -1,17 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>Vx.Shard.Collision</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Vx.Shard.Collision\Vx.Shard.Collision.csproj" />
+      <ProjectReference Include="..\Vx.Shard.Common\Vx.Shard.Common.csproj" />
       <ProjectReference Include="..\Vx.Shard.Core\Vx.Shard.Core.csproj" />
-      <ProjectReference Include="..\Vx.Shard.Input\Vx.Shard.Input.csproj" />
-      <ProjectReference Include="..\Vx.Shard.Sdl\Vx.Shard.Sdl.csproj" />
     </ItemGroup>
 
 </Project>

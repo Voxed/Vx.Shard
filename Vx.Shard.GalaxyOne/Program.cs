@@ -1,4 +1,5 @@
-﻿using Vx.Shard.Common;
+﻿using Vx.Shard.Collision;
+using Vx.Shard.Common;
 using Vx.Shard.Core;
 using Vx.Shard.GalaxyOne;
 using Vx.Shard.Graphics;

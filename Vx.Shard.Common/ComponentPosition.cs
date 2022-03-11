@@ -1,7 +1,7 @@
 using Vx.Shard.Common;
 using Vx.Shard.Core;
 
-namespace Vx.Shard.GalaxyOne;
+namespace Vx.Shard.Common;
 
 public class ComponentPosition : IComponent
 {

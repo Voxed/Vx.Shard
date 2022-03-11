@@ -1,6 +1,6 @@
 using Vx.Shard.Core;
 
-namespace Vx.Shard.GalaxyOne;
+namespace Vx.Shard.Collision;
 
 public class ComponentCollision : IComponent
 {
