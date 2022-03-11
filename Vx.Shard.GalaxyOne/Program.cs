@@ -23,6 +23,7 @@ var engine = new EngineBuilder()
     .AddSystem(new SystemSpatial())
     .AddSystem(new SystemPlayerControl())
     .AddSystem(new SystemShip())
+    .AddSystem(new SystemCollision())
     .AddSystem(new SystemGalaxyOne())
 
     .AddSystem(new SystemMainLoop())

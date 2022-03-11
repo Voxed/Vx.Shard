@@ -46,6 +46,11 @@ public class Vec2
     {
         return (float) Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
     }
+
+    public float Angle()
+    {
+        return (float) Math.Atan2(Y, X);
+    }
     
     /// <summary>
     /// Add two vectors together.
@@ -73,6 +78,12 @@ public class Vec2
         return new Vec2(first.X * second.X, first.Y * second.Y);
     }
 
+    public static Vec2 operator *(Vec2 first, float second)
+    {
+        return new Vec2(first.X * second, first.Y * second);
+    }
+
+    
     public override String ToString()
     {
         return $"<Vec2 x=\"{X}\" y=\"{Y}\">";

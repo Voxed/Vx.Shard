@@ -21,7 +21,7 @@ public class SystemMovement : ISystem
         
     }
 
-    public void Update(World world, MessageUpdate msg)
+    private void Update(World world, MessageUpdate msg)
     {
         // Apply velocity to position component.
         foreach (var entity in world.GetEntitiesWith<ComponentVelocity>().With<ComponentPosition>())
@@ -29,6 +29,7 @@ public class SystemMovement : ISystem
             var position = entity.GetComponent<ComponentPosition>()!;
             var velocity = entity.GetComponent<ComponentVelocity>()!;
             position.Position += velocity.Velocity;
+            velocity.Velocity *= 0.9f;
         }
     }
 }
