@@ -13,17 +13,9 @@ using System.Collections;
 /// </summary>
 public readonly struct EntitySet : IEnumerable<Entity>
 {
-    private readonly List<SortedSet<int>> _entityCollections;
+    private readonly IEnumerable<int> _entities;
     private readonly ComponentStore _store;
     private readonly ComponentRegistry _componentRegistry;
-    
-    private EntitySet(List<SortedSet<int>> entityCollections, ComponentStore store,
-        ComponentRegistry componentRegistry)
-    {
-        _entityCollections = entityCollections;
-        _store = store;
-        _componentRegistry = componentRegistry;
-    }
 
     /// <summary>
     /// Construct a new entity set from a list of entity ids and the component store they exist in.
@@ -31,34 +23,18 @@ public readonly struct EntitySet : IEnumerable<Entity>
     /// <param name="entities">The entity ids.</param>
     /// <param name="store">The component store where the entities reside.</param>
     /// <param name="componentRegistry">The component registry to use.</param>
-    internal EntitySet(SortedSet<int>? entities, ComponentStore store,
+    internal EntitySet(IEnumerable<int>? entities, ComponentStore store,
         ComponentRegistry componentRegistry)
     {
-        _entityCollections =
-            new List<SortedSet<int>>(entities != null ? 1 : 0);
-        if (entities != null) _entityCollections.Add(entities);
+        _entities = entities ?? new List<int>();
         _store = store;
         _componentRegistry = componentRegistry;
     }
 
-    /// <summary>
-    /// Get an enumerator to enumerate over the entities in the set.
-    /// </summary>
-    /// <returns>The entity enumerator.</returns>
-    public EntitySetEnumerator GetEnumerator()
+    public IEnumerator<Entity> GetEnumerator()
     {
-        var enumerators =
-            new List<SortedSet<int>.Enumerator>(_entityCollections.Count);
-        if (_entityCollections.Count <= 0) return new EntitySetEnumerator(enumerators, _store, _componentRegistry);
-        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-        foreach (var v in _entityCollections)
-            enumerators.Add(v.GetEnumerator());
-        return new EntitySetEnumerator(enumerators, _store, _componentRegistry);
-    }
-
-    IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator()
-    {
-        return GetEnumerator();
+        foreach (var entity in _entities)
+            yield return new Entity(entity, _store, _componentRegistry);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -76,99 +52,7 @@ public readonly struct EntitySet : IEnumerable<Entity>
         var componentId = _componentRegistry.GetComponentId<T>();
         var newCollection = _store.GetEntitiesWith(componentId);
         if (newCollection == null) return this;
-        var newEntityCollections =
-            new List<SortedSet<int>>(_entityCollections.Count + 1);
-        foreach (var v in _entityCollections)
-        {
-            newEntityCollections.Add(v);
-        }
-
-        newEntityCollections.Add(newCollection);
-        return new EntitySet(newEntityCollections, _store,
+        return new EntitySet(_entities.Intersect(newCollection), _store,
             _componentRegistry);
-    }
-}
-
-/// <summary>
-/// Enumerator of an EntitySet.
-/// </summary>
-public struct EntitySetEnumerator : IEnumerator<Entity>
-{
-    // This class intersects a collection of sorted component ID key collections quickly :)
-    // The algorithm is not based on anything well-tested as far as I know, so a proof might be a good idea.
-
-    private readonly ComponentRegistry _componentRegistry;
-    private readonly ComponentStore _store;
-    private readonly SortedSet<int>.Enumerator[] _entities;
-    private int _currValue = -1;
-    private bool _done;
-
-    /// <summary>
-    /// Construct a new EntitySetEnumerator from different entity collections to intersect and the component store
-    /// where they reside.
-    /// </summary>
-    /// <param name="list">The entity collections to intersect.</param>
-    /// <param name="store">The component store.</param>
-    /// <param name="componentRegistry">The component registry to use.</param>
-    internal EntitySetEnumerator(List<SortedSet<int>.Enumerator> list,
-        ComponentStore store, ComponentRegistry componentRegistry)
-    {
-        _entities = list.ToArray();
-        _store = store;
-        _componentRegistry = componentRegistry;
-        _done = _entities.Length == 0;
-    }
-
-    private (int, int) AllSame(int pos = 0)
-    {
-        if (_entities.Length == pos + 1) return (_entities[pos].Current, pos);
-
-        (int, int) allSame;
-        if (_entities[pos].Current == (allSame = AllSame(pos + 1)).Item1)
-            return (_entities[pos].Current, allSame.Item2);
-        return _entities[pos].Current < _entities[allSame.Item2].Current ? (-1, pos) : (-1, allSame.Item2);
-    }
-
-    public bool MoveNext()
-    {
-        if (_done)
-            return false;
-
-        for (var i = 0; i < _entities.Length; i++)
-        {
-            if (!_entities[i].MoveNext())
-            {
-                _done = true;
-                return false;
-            }
-        }
-
-        (int, int) allSame;
-        while ((allSame = AllSame()).Item1 == -1)
-        {
-            if (_entities[allSame.Item2].MoveNext()) continue;
-            _done = true;
-            return false;
-        }
-
-        _currValue = allSame.Item1;
-
-        return true;
-    }
-
-    public void Reset()
-    {
-        throw new InvalidOperationException();
-    }
-
-    object IEnumerator.Current => Current;
-
-    public Entity Current =>
-        _done || _currValue == -1
-            ? throw new InvalidOperationException()
-            : new Entity(_currValue, _store, _componentRegistry);
-
-    public void Dispose()
-    {
     }
 }

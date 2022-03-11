@@ -13,7 +13,7 @@ public class SystemMovement : ISystem
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
         ComponentStoreListenerBuilder componentStoreListenerBuilder)
     {
-        
+        messageBusListenerBuilder.AddCallback<MessageUpdate>(Update);
     }
 
     public void Initialize(World world)

@@ -5,5 +5,5 @@ namespace Vx.Shard.Window;
 
 public class ComponentMouse : IComponent
 {
-    public Vec2 Position;
+    public Vec2 Position = Vec2.Zero;
 }

@@ -36,6 +36,12 @@ public class Vec2
         Y = y;
     }
 
+    public Vec2(float x)
+    {
+        X = x;
+        Y = x;
+    }
+
     public float Distance()
     {
         return (float) Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));

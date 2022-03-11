@@ -66,31 +66,25 @@ public class SystemSdlGraphics : ISystem
                 Opacity = sprite.Opacity + context.Opacity
             };
 
-
-            // Huge TODO
             SDL.SDL_Rect sRect;
             SDL.SDL_Rect tRect;
-
-            //var spr = context.Sys!.LoadTexture(sprite.Resource!, out var w, out var h, context.Renderer);
-
-            sRect.x = 0;
-            sRect.y = 0;
-            sRect.w = texture.Width;
-            sRect.h = texture.Height;
+            
+            sRect.w = (int) (texture.Width/sprite.Grid.X);
+            sRect.h = (int) (texture.Height/sprite.Grid.Y);
+            sRect.x = (int) (sprite.Cell.X*sRect.w);
+            sRect.y = (int) (sprite.Cell.Y*sRect.h);
 
             var tr = newContext.Transform;
-
 
             var rot = Math.Atan2(tr.M12, tr.M11);
 
             var shear = Math.Atan2(tr.M22, tr.M21) - Math.PI / 2 - rot;
 
-
             var scaleX = Math.Sqrt(tr.M11 * tr.M11 + tr.M12 * tr.M12);
             var scaleY = Math.Sqrt(tr.M21 * tr.M21 + tr.M22 * tr.M22);
 
-            tRect.w = (int) (scaleX * sRect.w);
-            tRect.h = (int) (scaleY * sRect.h * Math.Cos(shear));
+            tRect.w = (int) Math.Round(scaleX * sRect.w);
+            tRect.h = (int) Math.Round(scaleY * sRect.h * Math.Cos(shear));
             tRect.x = (int) (newContext.Transform.M31);
             tRect.y = (int) (newContext.Transform.M32);
 
@@ -137,7 +131,7 @@ public class SystemSdlGraphics : ISystem
             SDL.SDL_SetTextureColorMod(spr, (byte) (newContext.Tint.R * 255), (byte) (newContext.Tint.G * 255),
                 (byte) (newContext.Tint.B * 255));
             SDL.SDL_SetTextureAlphaMod(spr, (byte) (255 - 255 * newContext.Opacity));
-            SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, rot / 3.14 * 180,
+            SDL.SDL_RenderCopyEx(context.Renderer, spr, ref sRect, ref tRect, rot / 3.14 * 180.0f,
                 ref center,
                 SDL.SDL_RendererFlip.SDL_FLIP_NONE);
         }
@@ -193,12 +187,17 @@ public class SystemSdlGraphics : ISystem
                 Renderer = e.GetComponent<ComponentSdl>()!.Renderer,
                 Sys = this
             };
-
-            SDL.SDL_SetRenderDrawColor(context.Renderer, 0, 0, 0, 255);
-            SDL.SDL_RenderClear(context.Renderer);
+            
             foreach (var entity in world.GetEntitiesWith<ComponentGraphicsScene>())
             {
                 var scene = entity.GetComponent<ComponentGraphicsScene>()!;
+                SDL.SDL_SetRenderDrawColor(
+                    context.Renderer, 
+                    (byte) scene.ClearColor.R, 
+                    (byte) scene.ClearColor.G, 
+                    (byte) scene.ClearColor.B, 
+                    255);
+                SDL.SDL_RenderClear(context.Renderer);
                 var root = scene.Root;
                 root.Accept(context, new DrawableVisitorSdl());
             }

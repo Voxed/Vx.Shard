@@ -10,8 +10,6 @@ public class SystemGalaxyOne : ISystem
 {
     public void Register(MessageRegistry messageRegistry, ComponentRegistry componentRegistry)
     {
-        componentRegistry.Register<ComponentPosition>();
-        componentRegistry.Register<ComponentResourcesShip1Renderer>();
     }
 
     public void Configure(MessageBusListenerBuilder messageBusListenerBuilder,
@@ -19,29 +17,27 @@ public class SystemGalaxyOne : ISystem
     {
         messageBusListenerBuilder
             .AddCallback<MessageWindowClose>(ExitGame);
-
-        componentStoreListenerBuilder.AddCallback<ComponentResourcesShip1Renderer>(
-            (world, entity, component) =>
-            {
-                entity.GetComponent<ComponentResources>()?.Resources.Add(component.Texture);
-                entity.GetComponent<ComponentRenderer>()?.DrawableContainer.AddChild(component.Sprite);
-            },
-            (world, entity, component) =>
-            {
-                entity.GetComponent<ComponentResources>()?.Resources.Remove(component.Texture);
-                entity.GetComponent<ComponentRenderer>()?.DrawableContainer.RemoveChild(component.Sprite);   
-            }
-        );
     }
 
     public void Initialize(World world)
     {
-        world.CreateEntity()
+        var entity = world.CreateEntity()
             .AddComponent(new ComponentResources())
             .AddComponent(new ComponentRenderer())
             .AddComponent(new ComponentPosition())
             .AddComponent(new ComponentVelocity())
-            .AddComponent(new ComponentResourcesShip1Renderer());
+            .AddComponent(new ComponentShipRenderer("assets/textures/ship1.png", "assets/textures/boost1.png", 5))
+            .AddComponent(new ComponentPlayerController());
+
+        
+        var entity2 = world.CreateEntity()
+            .AddComponent(new ComponentResources())
+            .AddComponent(new ComponentRenderer())
+            .AddComponent(new ComponentPosition())
+            .AddComponent(new ComponentVelocity())
+            .AddComponent(new ComponentShipRenderer("assets/textures/ship1.png", "assets/textures/boost1.png", 5));
+
+        entity2.GetComponent<ComponentPosition>()!.Position = new Vec2(400.0f, 200.0f);
     }
 
     /// <summary>

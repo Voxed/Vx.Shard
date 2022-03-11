@@ -19,9 +19,12 @@ var engine = new EngineBuilder()
     .AddSystem(new SystemSdlInput())
     
     // Game specific systems.
-    .AddSystem(new SystemGalaxyOne())
     .AddSystem(new SystemMovement())
-    
+    .AddSystem(new SystemSpatial())
+    .AddSystem(new SystemPlayerControl())
+    .AddSystem(new SystemShip())
+    .AddSystem(new SystemGalaxyOne())
+
     .AddSystem(new SystemMainLoop())
     .Build();
 

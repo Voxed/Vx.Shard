@@ -20,6 +20,9 @@ public class DrawableSprite : IDrawable
 
     private int _zOrder = 0;
 
+    public Vec2 Grid { get; set; } = Vec2.One;
+    public Vec2 Cell {get; set;} = Vec2.Zero;
+
     public DrawableSprite(ResourceReference resource)
     {
         Resource = resource;
