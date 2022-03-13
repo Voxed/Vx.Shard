@@ -19,18 +19,23 @@ public class SystemPlayerControl : ISystem
 
     public void Initialize(World world)
     {
-        
     }
 
     private void Update(World world, MessageUpdate msg)
     {
         foreach (var entity in world.GetEntitiesWith<ComponentPlayerController>().With<ComponentVelocity>())
         {
-            entity.GetComponent<ComponentVelocity>()!.Velocity =
-                (world.GetSingletonComponent<ComponentMouse>()!.Position -
-                 entity.GetComponent<ComponentPosition>()!.Position) / 8.0f;
+            var ctrl = entity.GetComponent<ComponentPlayerController>()!;
+            
+            var newVelocity = ((world.GetSingletonComponent<ComponentMouse>()!.Position -
+                               entity.GetComponent<ComponentPosition>()!.Position) / 8.0f) * 50f;
+
+            if (newVelocity.Distance() > ctrl.MaxVelocity)
+            {
+                newVelocity = newVelocity / newVelocity.Distance() * ctrl.MaxVelocity;
+            }
+            
+            entity.GetComponent<ComponentVelocity>()!.Velocity = newVelocity;
         }
-        
-        
     }
 }

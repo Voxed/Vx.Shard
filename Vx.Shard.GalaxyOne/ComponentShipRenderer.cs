@@ -15,6 +15,10 @@ public class ComponentShipRenderer : IComponent
 
     public readonly DateTime CreationTime = DateTime.Now;
     public readonly int BoostAnimationLength = 0;
+
+    public float Rotation = 0;
+    public bool Flipped = false;
+    public Color Tint = Color.White;
     
     public ComponentShipRenderer(string shipTexturePath, string boostTexturePath, int boostAnimationLength)
     {

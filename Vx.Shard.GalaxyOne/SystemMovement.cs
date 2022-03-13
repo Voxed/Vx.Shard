@@ -28,8 +28,8 @@ public class SystemMovement : ISystem
         {
             var position = entity.GetComponent<ComponentPosition>()!;
             var velocity = entity.GetComponent<ComponentVelocity>()!;
-            position.Position += velocity.Velocity;
-            velocity.Velocity *= 0.9f;
+            position.Position += velocity.Velocity * (float) msg.Delta.TotalSeconds;
+            velocity.Velocity -= velocity.Velocity * (float) msg.Delta.TotalSeconds * 2.0f;
         }
     }
 }

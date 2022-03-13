@@ -26,6 +26,7 @@ var engine = new EngineBuilder()
     .AddSystem(new SystemMovement())
     .AddSystem(new SystemSpatial())
     .AddSystem(new SystemPlayerControl())
+    .AddSystem(new SystemEnemyShipControl())
     .AddSystem(new SystemShip())
     .AddSystem(new SystemGalaxyOne())
 

@@ -73,8 +73,8 @@ public class SystemCollision : ISystem
                         (float) ((v2*Math.Cos(a2 - g) * (m2 - m1) + 2*m1*v1*Math.Cos(a1-g))/(m1 + m2)*Math.Sin(g) + v2*Math.Sin(a2-g)*Math.Sin(g+Math.PI/2))
                     );
 
-                    var pushVec = (p2.Position - p1.Position) / (p2.Position - p1.Position).Distance() *
-                                  ((c1.Radius + c2.Radius) - (p2.Position - p1.Position).Distance());
+                    var pushVec = ((p2.Position - p1.Position).Distance() != 0 ? (p2.Position - p1.Position) / (p2.Position - p1.Position).Distance() : new Vec2(0, 1)) *
+                                  ((c1.Radius + c2.Radius + 0.1f) - (p2.Position - p1.Position).Distance());
                     p2.Position += pushVec / 2;
                     p1.Position -= pushVec / 2;
 

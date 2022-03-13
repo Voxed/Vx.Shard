@@ -4,5 +4,5 @@ namespace Vx.Shard.GalaxyOne;
 
 public class ComponentPlayerController : IComponent
 {
-    
+    public float MaxVelocity = 1600;
 }

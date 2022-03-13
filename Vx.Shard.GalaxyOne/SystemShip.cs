@@ -36,9 +36,8 @@ public class SystemShip : ISystem
 
     public void Initialize(World world)
     {
-        
     }
-    
+
     private void Update(World world, MessageUpdate _)
     {
         foreach (var entity in world.GetEntitiesWith<ComponentShipRenderer>())
@@ -47,7 +46,12 @@ public class SystemShip : ISystem
                 (int) ((DateTime.Now - entity.GetComponent<ComponentShipRenderer>()!.CreationTime).TotalSeconds * 10)
                 % entity.GetComponent<ComponentShipRenderer>()!.BoostAnimationLength;
             entity.GetComponent<ComponentRenderer>()!.DrawableContainer.Rotation =
-                entity.GetComponent<ComponentVelocity>()!.Velocity.X/60.0f;
+                (float) (entity.GetComponent<ComponentVelocity>()!.Velocity.X / 2000.0f *
+                         (entity.GetComponent<ComponentShipRenderer>()!.Flipped ? -1 : 1) +
+                         (entity.GetComponent<ComponentShipRenderer>()!.Flipped ? Math.PI : 0) +
+                         entity.GetComponent<ComponentShipRenderer>()!.Rotation);
+            entity.GetComponent<ComponentShipRenderer>()!.ShipSprite.Tint =
+                entity.GetComponent<ComponentShipRenderer>()!.Tint;
         }
     }
 }
