@@ -1,5 +1,7 @@
+using Vx.Shard.Collision;
 using Vx.Shard.Common;
 using Vx.Shard.Core;
+using Vx.Shard.Physics;
 using Vx.Shard.Window;
 
 namespace Vx.Shard.GalaxyOne;
@@ -23,19 +25,25 @@ public class SystemPlayerControl : ISystem
 
     private void Update(World world, MessageUpdate msg)
     {
-        foreach (var entity in world.GetEntitiesWith<ComponentPlayerController>().With<ComponentVelocity>())
+        // After a lot of experimenting, this is the simple control algorithm I ended up with. I'm not especially proud
+        // of my physics display.
+        foreach (var entity in world.GetEntitiesWith<ComponentPlayerController>().With<ComponentPhysics>())
         {
+            var physics = entity.GetComponent<ComponentPhysics>()!;
             var ctrl = entity.GetComponent<ComponentPlayerController>()!;
-            
-            var newVelocity = ((world.GetSingletonComponent<ComponentMouse>()!.Position -
-                               entity.GetComponent<ComponentPosition>()!.Position) / 8.0f) * 50f;
 
-            if (newVelocity.Distance() > ctrl.MaxVelocity)
+            var targetVelocity = (world.GetSingletonComponent<ComponentMouse>()!.Position -
+                                  entity.GetComponent<ComponentPosition>()!.Position) * 5;
+
+            physics.Acceleration = (targetVelocity - physics.Velocity) * 50;
+
+            if (physics.Acceleration.Distance() > ctrl.MaxAcceleration)
+                physics.Acceleration = physics.Acceleration.Normalize() * ctrl.MaxAcceleration;
+
+            if (physics.Velocity.Distance() > ctrl.MaxVelocity)
             {
-                newVelocity = newVelocity / newVelocity.Distance() * ctrl.MaxVelocity;
+                physics.Velocity = physics.Velocity / physics.Velocity.Distance() * ctrl.MaxVelocity;
             }
-            
-            entity.GetComponent<ComponentVelocity>()!.Velocity = newVelocity;
         }
     }
 }

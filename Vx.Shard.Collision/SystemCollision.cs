@@ -1,6 +1,7 @@
 using Vx.Shard.Collision;
 using Vx.Shard.Common;
 using Vx.Shard.Core;
+using Vx.Shard.Physics;
 
 namespace Vx.Shard.Collision;
 
@@ -30,7 +31,7 @@ public class SystemCollision : ISystem
     {
         var colliders = world
             .GetEntitiesWith<ComponentCollision>()
-            .With<ComponentVelocity>()
+            .With<ComponentPhysics>()
             .With<ComponentPosition>().ToList();
 
         // Boilerplate elastic collision algorithm.
@@ -49,8 +50,8 @@ public class SystemCollision : ISystem
 
                 if ((p1.Position - p2.Position).Distance() < c1.Radius + c2.Radius)
                 {
-                    var cv1 = e1.GetComponent<ComponentVelocity>()!;
-                    var cv2 = e2.GetComponent<ComponentVelocity>()!;
+                    var cv1 = e1.GetComponent<ComponentPhysics>()!;
+                    var cv2 = e2.GetComponent<ComponentPhysics>()!;
                 
                     var m1 = Math.Pow(c1.Radius, 2) * Math.PI;
                     var m2 = Math.Pow(c2.Radius, 2) * Math.PI;
@@ -74,11 +75,12 @@ public class SystemCollision : ISystem
                     );
 
                     var pushVec = ((p2.Position - p1.Position).Distance() != 0 ? (p2.Position - p1.Position) / (p2.Position - p1.Position).Distance() : new Vec2(0, 1)) *
-                                  ((c1.Radius + c2.Radius + 0.1f) - (p2.Position - p1.Position).Distance());
+                                  ((c1.Radius + c2.Radius) - (p2.Position - p1.Position).Distance());
                     p2.Position += pushVec / 2;
                     p1.Position -= pushVec / 2;
 
                     world.Send(new MessageImpact(e1, e2));
+                    world.Send(new MessageImpact(e2, e1));
                 }
             }
         }

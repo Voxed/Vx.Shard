@@ -1,6 +1,7 @@
 using Vx.Shard.Common;
 using Vx.Shard.Core;
 using Vx.Shard.Graphics;
+using Vx.Shard.Physics;
 
 namespace Vx.Shard.GalaxyOne;
 
@@ -30,7 +31,7 @@ public class SystemEnemyShipControl : ISystem
             entity.GetComponent<ComponentShipRenderer>()!.Tint = new Color(1, 0.5f, 0.5f);
         }
 
-        foreach (var entity in world.GetEntitiesWith<ComponentEnemyShipController>().With<ComponentVelocity>().With<
+        foreach (var entity in world.GetEntitiesWith<ComponentEnemyShipController>().With<ComponentPhysics>().With<
                      ComponentPosition>())
         {
             // Velocity control here
@@ -70,8 +71,8 @@ public class SystemEnemyShipControl : ISystem
                     newVelocity = newVelocity / newVelocity.Distance() * ctrl.MaxVelocity;
                 }
 
-                entity.GetComponent<ComponentVelocity>()!.Velocity +=
-                    (newVelocity - entity.GetComponent<ComponentVelocity>()!.Velocity) *
+                entity.GetComponent<ComponentPhysics>()!.Velocity +=
+                    (newVelocity - entity.GetComponent<ComponentPhysics>()!.Velocity) *
                     (float) msg.Delta.TotalSeconds * 10;
 
                 if (entity.GetComponent<ComponentPosition>()!.Position.Y > 800)

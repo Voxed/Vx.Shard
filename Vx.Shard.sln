@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.GalaxyOne", "Vx.Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Collision", "Vx.Shard.Collision\Vx.Shard.Collision.csproj", "{3A6211E0-167E-47E8-B4F0-B5956D0C9CB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vx.Shard.Physics", "Vx.Shard.Physics\Vx.Shard.Physics.csproj", "{C2E78446-4870-42A4-A9E2-691ED74E9F05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +68,9 @@ Global
 		{3A6211E0-167E-47E8-B4F0-B5956D0C9CB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A6211E0-167E-47E8-B4F0-B5956D0C9CB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A6211E0-167E-47E8-B4F0-B5956D0C9CB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2E78446-4870-42A4-A9E2-691ED74E9F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E78446-4870-42A4-A9E2-691ED74E9F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E78446-4870-42A4-A9E2-691ED74E9F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E78446-4870-42A4-A9E2-691ED74E9F05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

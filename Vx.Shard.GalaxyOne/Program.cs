@@ -3,6 +3,7 @@ using Vx.Shard.Common;
 using Vx.Shard.Core;
 using Vx.Shard.GalaxyOne;
 using Vx.Shard.Graphics;
+using Vx.Shard.Physics;
 using Vx.Shard.Resources;
 using Vx.Shard.Sdl;
 using Vx.Shard.Window;
@@ -21,13 +22,14 @@ var engine = new EngineBuilder()
 
     // Add other goodies
     .AddSystem(new SystemCollision())
+    .AddSystem(new SystemPhysics())
 
     // Game specific systems.
-    .AddSystem(new SystemMovement())
     .AddSystem(new SystemSpatial())
     .AddSystem(new SystemPlayerControl())
     .AddSystem(new SystemEnemyShipControl())
     .AddSystem(new SystemShip())
+    .AddSystem(new SystemGuns())
     .AddSystem(new SystemGalaxyOne())
 
     .AddSystem(new SystemMainLoop())

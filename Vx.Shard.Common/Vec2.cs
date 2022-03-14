@@ -51,6 +51,26 @@ public class Vec2
     {
         return (float) Math.Atan2(Y, X);
     }
+
+    public Vec2 Normalize()
+    {
+        return new Vec2(X / Distance(), Y / Distance());
+    }
+
+    public float Project(Vec2 other)
+    {
+        return Dot(other) / other.Distance();
+    }
+
+    public float Dot(Vec2 other)
+    {
+        return X * other.X + Y * other.Y;
+    }
+    
+    public Vec2 Normal()
+    {
+        return new Vec2(Y, -X);
+    }
     
     /// <summary>
     /// Add two vectors together.

@@ -19,6 +19,7 @@ public class ComponentShipRenderer : IComponent
     public float Rotation = 0;
     public bool Flipped = false;
     public Color Tint = Color.White;
+    public float DamageState = 0;
     
     public ComponentShipRenderer(string shipTexturePath, string boostTexturePath, int boostAnimationLength)
     {
